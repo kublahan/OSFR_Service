@@ -1,7 +1,12 @@
 <script>
-
+import SearchInput from '@/components/SearchInput.vue';
+import CategoryDropdown from '../components/CategoryDropdown.vue';
 export default {
   name: 'MainView',
+  components: {
+    SearchInput,
+    CategoryDropdown
+  }
 
 };
 </script>
@@ -11,16 +16,19 @@ export default {
     <div class="header-left">
       <img src="@/assets/icons/Logo_OSFR.jpg" alt="OSFR Logo" class="logo">
       </div>
-    <div class="header-right">
         <button class="login-button">Войти</button>
-      </div>
   </header>
 
   <div class="name-banner">
-    <h1 class="name-text"> 
-        Корпоративный ресурс ОСФР по г. Москве и Московской области
-    </h1>
+        Корпоративный ресурс ОСФР <br>по г. Москве и Московской области
     </div>
+
+    <div class="search-category">
+      <SearchInput/>
+      <CategoryDropdown/>
+    </div>
+
+    
 </template>
 
 <style>
@@ -30,7 +38,7 @@ export default {
   align-items: center;
   background-color: #fff;
   width: 100%;
-  height: 89px;
+  height: 5.5625rem;
 }
 
 .header-left {
@@ -39,28 +47,40 @@ export default {
 }
 
 .logo {
-  height: 52px;
-  width: 63px;
+  height: 3.25rem;
+  width: 3.9375rem;
+  margin-left: 33px;
 }
 
 .login-button {
     background-color: #D6E9FD;
     color: #191F66;
     border: none;
-    padding: 9px, 25px;
-    border-radius: 5px;
+    padding: 0.5625rem 1.5625rem;
+    border-radius: 0.3125rem;
     cursor: pointer;
-    width: 123px;
-    height: 47px;
-    font-size: 25px;
+    width: 7.6875rem;
+    height: 2.9375rem;
+    font-size: 1.5625rem;
+    
+    margin-right: 34px;
 }
 
 .name-banner {
     width: 100%;
-    height: 210px;
-    text-align: center;
+    height: 13.125rem;
     background: linear-gradient(to right, #0983FE 12%, #124AA7 41%, #1A185C 100%);
     color: #FFFFFF; 
-    font-size: 69px;
+    font-size: 4.3125rem;
+    font-family: 'Lato-SemiBold';
+    letter-spacing: 0.03rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+    padding: 1.375rem;
+    text-align: center;
 }
 </style>
