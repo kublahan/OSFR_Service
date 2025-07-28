@@ -1,11 +1,13 @@
 <script>
 import SearchInput from '@/components/SearchInput.vue';
-import CategoryDropdown from '../components/CategoryDropdown.vue';
+import CategoryDropdown from '@/components/CategoryDropdown.vue';
+import ResourcesTable from '@/components/ResourcesTable.vue';
 export default {
   name: 'MainView',
   components: {
     SearchInput,
-    CategoryDropdown
+    CategoryDropdown,
+    ResourcesTable
   }
 
 };
@@ -28,6 +30,9 @@ export default {
       <CategoryDropdown/>
     </div>
 
+    <div class="resources-table">
+      <ResourcesTable/>
+    </div>
     
 </template>
 
@@ -70,7 +75,7 @@ export default {
 
 .name-banner {
     width: 100%;
-    height: 100%;
+    height: 13.125rem;
     background: linear-gradient(to right, #0983FE 12%, #124AA7 41%, #1A185C 100%);
     color: #FFFFFF; 
     font-size: 4.3125rem;
@@ -93,4 +98,5 @@ export default {
   gap: 1rem;                 
   flex-wrap: wrap; 
 }
+
 </style>
