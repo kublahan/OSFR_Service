@@ -56,7 +56,9 @@ export default {
     background-color: #D6E9FD;
     color: #191F66;
     border: none;
-    padding: 0.5625rem 1.5625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 0.3125rem;
     cursor: pointer;
     width: 7.6875rem;
@@ -68,7 +70,7 @@ export default {
 
 .name-banner {
     width: 100%;
-    height: 13.125rem;
+    height: 100%;
     background: linear-gradient(to right, #0983FE 12%, #124AA7 41%, #1A185C 100%);
     color: #FFFFFF; 
     font-size: 4.3125rem;
@@ -82,5 +84,13 @@ export default {
     box-sizing: border-box;
     padding: 1.375rem;
     text-align: center;
+}
+
+.search-category {
+  display: flex;             
+  align-items: center;       
+  justify-content: center;   
+  gap: 1rem;                 
+  flex-wrap: wrap; 
 }
 </style>
