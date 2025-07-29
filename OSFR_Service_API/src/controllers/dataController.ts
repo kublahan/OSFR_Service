@@ -3,18 +3,16 @@ import pool from '../models';
 
 export const getCategories = async (req: Request, res: Response) => {
     try {
-        // ИСПРАВЛЕНИЕ: Запрашиваем id и name из таблицы 'categories'
-        // Предполагается, что у вас есть таблица 'categories' с колонками 'id' и 'name'
-        const result = await pool.query('SELECT id, name FROM categories ORDER BY name'); // Добавим ORDER BY для сортировки
-        console.log('Backend: Fetched categories:', result.rows); // Добавьте лог для проверки на бэкенде
-        res.json(result.rows); // Отправляем массив объектов {id: ..., name: ...}
+        const result = await pool.query('SELECT id, name FROM categories ORDER BY name');
+        console.log('Backend: Fetched categories:', result.rows);
+        res.json(result.rows);
     } catch (err) {
         console.error('Ошибка при получении категорий:', err);
         res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
 };
 
-// Для получения элементов (оставлено без изменений, так как здесь проблема не была)
+
 export const getAllItems = async (req: Request, res: Response) => {
     const { category } = req.query;
     console.log('Fetching items, category filter:', category);

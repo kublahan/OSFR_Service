@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import MainView from '@/views/MainView.vue';
+import MainViewAdmin from '@/views/MainViewAdmin.vue';
+import AuthorizationView from '@/views/AuthorizationView.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -7,9 +8,18 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component:MainView,
+            component:MainViewAdmin,
             meta: {
-                windowTitle: 'Главная страница',
+                windowTitle: 'Главная страница админа',
+            },
+        },
+
+        {
+            path: '/auth',
+            name: 'auth',
+            component:AuthorizationView,
+            meta: {
+                windowTitle: 'Авториация',
             },
         },
     ],

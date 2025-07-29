@@ -1,13 +1,26 @@
 <template>
-
-      <input type="text" class="search-input" placeholder="Поиск..."></input>
-
+  <input
+    type="text"
+    v-model="searchTerm"
+    @input="emitSearch"
+    placeholder="Поиск..."
+    class="search-input"
+  />
 </template>
 
 <script>
 export default {
   name: 'SearchInput',
-
+  data() {
+    return {
+      searchTerm: '',
+    };
+  },
+  methods: {
+    emitSearch() {
+      this.$emit('search', this.searchTerm);
+    },
+  },
 };
 </script>
 
@@ -35,7 +48,7 @@ export default {
 }
 
 .search-input::placeholder {
-  font-family: 'Inter-Regular'; /* не работает*/
+  font-family: 'Inter-Regular';
   font-size: 1.5625rem;
   color: #000000;
   opacity: 0.6;

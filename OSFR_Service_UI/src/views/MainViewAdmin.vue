@@ -4,19 +4,18 @@ import axios from 'axios';
 import SearchInput from '@/components/SearchInput.vue';
 import CategoryDropdown from '@/components/CategoryDropdown.vue';
 import ResourcesTable from '@/components/ResourcesTable.vue';
-import type { PropType } from 'vue';
 
 interface TableItem {
   id: number | string;
   category_id: number | string;
-  category_name?: string; // Сделаем необязательным, так как мы его добавляем динамически
+  category_name?: string;
   name: string;
   service: string;
   url: string;
 }
 
 export default defineComponent({
-  name: 'MainView',
+  name: 'MainViewAdmin',
   components: {
     SearchInput,
     CategoryDropdown,
@@ -79,7 +78,7 @@ export default defineComponent({
       console.log(`getCategoryName: Looking for category ID: ${categoryId} (type: ${typeof categoryId})`);
       console.log('getCategoryName: Available categories:', this.categories.map(c => ({ id: c.id, type: typeof c.id })));
 
-      // Используем == для гибкого сравнения типов (число vs строка)
+
       const category = this.categories.find(c => c.id == categoryId);
       
       if (!category) {
@@ -125,9 +124,13 @@ export default defineComponent({
 <template>
   <header class="app-header">
     <div class="header-left">
-      <img src="@/assets/icons/Logo_OSFR.jpg" alt="OSFR Logo" class="logo">
+      <img src="/Logo_OSFR.svg" alt="OSFR Logo" class="logo">
     </div>
-    <button class="login-button">Войти</button>
+
+    <router-link :to="{ name: 'auth'}">
+      <button class="login-button">Войти</button>
+    </router-link>
+    
   </header>
 
   <div class="name-banner">

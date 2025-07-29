@@ -6,7 +6,7 @@ import type { PropType } from 'vue';
 interface TableItem {
   id: number | string;
   category_id: number | string;
-  category_name?: string; // Сделаем необязательным, если он не всегда приходит напрямую
+  category_name?: string;
   name: string;
   service: string;
   url: string;
@@ -22,12 +22,11 @@ export default defineComponent({
     },
   },
   watch: {
-    // Добавьте watcher для отслеживания изменений в пропсе items
+
     items: {
       handler(newItems) {
         console.log('ResourcesTable: received items prop update. First item category_name:', newItems[0]?.category_name);
-        // Вы можете даже вывести весь массив, чтобы убедиться в наличии category_name
-        // console.log('ResourcesTable: received items:', newItems);
+
       },
       deep: true, // Глубокое наблюдение за изменениями в массиве объектов
       immediate: true // Запустить хэндлер сразу после инициализации

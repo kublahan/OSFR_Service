@@ -1,10 +1,10 @@
 <template>
   <div class="category-dropdown-wrapper">
-    <!-- Заголовок выпадающего списка, который будет открывать/закрывать список -->
+
     <div class="category-dropdown-header" @click="toggleDropdown">
-      <!-- Отображаем выбранную категорию или "Все категории" -->
+
       <span>{{ displaySelectedCategory }}</span>
-      <!-- Иконка стрелки, которая будет вращаться -->
+
       <svg
         :class="{ 'rotated': isOpen }"
         class="dropdown-arrow-icon"
@@ -19,9 +19,8 @@
       </svg>
     </div>
 
-    <!-- Сам выпадающий список (отображается, если isOpen = true) -->
     <div v-if="isOpen" class="category-dropdown-list">
-      <!-- Опция "Все категории" -->
+
       <div
         class="category-dropdown-item"
         @click="selectCategory(null)"
@@ -48,10 +47,10 @@ export default {
   name: 'CategoryDropdown',
   data() {
     return {
-      categories: [], // Массив объектов категорий { id: number, name: string }
-      selectedCategoryId: null, // ID выбранной категории (null для "Все категории")
-      selectedCategoryName: 'Все категории', // Отображаемое имя выбранной категории
-      isOpen: false, // Состояние для управления открытием/закрытием выпадающего списка
+      categories: [],
+      selectedCategoryId: null,
+      selectedCategoryName: 'Все категории',
+      isOpen: false,
     };
   },
   computed: {
@@ -64,7 +63,7 @@ export default {
     try {
       // Запрос к бэкенду для получения категорий
       const response = await axios.get('http://localhost:3000/api/categories');
-      // Ожидаем, что response.data будет массивом объектов { id: number, name: string }
+
       this.categories = response.data;
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -85,14 +84,12 @@ export default {
     selectCategory(id, name = 'Все категории') {
       this.selectedCategoryId = id;
       this.selectedCategoryName = name;
-      this.isOpen = false; // Закрываем список после выбора
-      this.emitFilter(); // Вызываем метод для отправки события фильтрации
+      this.isOpen = false;
+      this.emitFilter();
     },
-    /**
-     * Отправляет событие 'update:category' родительскому компоненту с выбранным ID категории.
-     */
+
     emitFilter() {
-      // Используем 'update:category' для соответствия MainView.vue
+
       this.$emit('update:category', this.selectedCategoryId);
     },
   },
@@ -100,7 +97,7 @@ export default {
 </script>
 
 <style scoped>
-/* Ваши стили, которые теперь будут применяться к новой структуре HTML */
+
 
 .category-dropdown-wrapper {
   position: relative;
@@ -108,7 +105,7 @@ export default {
   margin-left: 1rem;
   margin-top: 2.25rem;
   font-family: 'Inter-Regular';
-  z-index: 1000; /* Убедитесь, что выпадающий список находится поверх других элементов */
+  z-index: 1000;
 }
 
 .category-dropdown-header {
@@ -119,16 +116,16 @@ export default {
   height: 3.9375rem;
   background-color: #D6E9FD;
   border: none;
-  border-radius: 0.625rem; /* Единый радиус для закрытого состояния */
+  border-radius: 0.625rem;
   font-size: 1.5625rem;
   color: #191F66;
   padding: 0 1rem;
   cursor: pointer;
-  /* Добавим небольшой box-shadow для эффекта */
+
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Стили для заголовка, когда список открыт (верхние углы остаются закругленными, нижние - прямые) */
+
 .category-dropdown-wrapper.open .category-dropdown-header {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -137,14 +134,14 @@ export default {
 
 .category-dropdown-list {
   position: absolute;
-  top: 100%; /* Размещаем список сразу под заголовком */
+  top: 100%;
   left: 0;
   width: 100%;
   background-color: #D6E9FD;
-  border-radius: 0 0 0.625rem 0.625rem; /* Закругленные нижние углы */
+  border-radius: 0 0 0.625rem 0.625rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* Скрываем содержимое, выходящее за границы */
-  border-top: 1px solid #c0d9fa; /* Небольшая граница между заголовком и списком */
+  overflow: hidden;
+  border-top: 1px solid #c0d9fa;
 }
 
 .category-dropdown-item {
@@ -152,11 +149,11 @@ export default {
   font-size: 1.25rem;
   color: #191F66;
   cursor: pointer;
-  border-bottom: 1px solid rgba(25, 31, 102, 0.1); /* Разделитель между пунктами */
+  border-bottom: 1px solid rgba(25, 31, 102, 0.1);
 }
 
 .category-dropdown-item:last-child {
-  border-bottom: none; /* Убираем разделитель у последнего элемента */
+  border-bottom: none;
 }
 
 .category-dropdown-item:hover {

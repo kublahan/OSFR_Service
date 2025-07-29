@@ -1,6 +1,5 @@
-// src/server.ts
-import app from '@/app'; // Импортируем сконфигурированное Express-приложение
-import dotenv from 'dotenv'; // Для доступа к переменным окружения, если они нужны здесь
+import app from '@/app';
+import dotenv from 'dotenv';
 
 dotenv.config(); // Загружаем переменные окружения
 
