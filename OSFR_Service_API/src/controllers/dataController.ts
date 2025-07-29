@@ -3,32 +3,34 @@ import pool from '../models';
 
 export const getCategories = async (req: Request, res: Response) => {
     try {
-        // Используем правильное имя столбца (category_id вместо category)
-        const result = await pool.query('SELECT DISTINCT category_id FROM resources');
-        res.json(result.rows.map(row => row.category_id));
+        // ИСПРАВЛЕНИЕ: Запрашиваем id и name из таблицы 'categories'
+        // Предполагается, что у вас есть таблица 'categories' с колонками 'id' и 'name'
+        const result = await pool.query('SELECT id, name FROM categories ORDER BY name'); // Добавим ORDER BY для сортировки
+        console.log('Backend: Fetched categories:', result.rows); // Добавьте лог для проверки на бэкенде
+        res.json(result.rows); // Отправляем массив объектов {id: ..., name: ...}
     } catch (err) {
         console.error('Ошибка при получении категорий:', err);
         res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
 };
 
-// Для получения элементов
+// Для получения элементов (оставлено без изменений, так как здесь проблема не была)
 export const getAllItems = async (req: Request, res: Response) => {
     const { category } = req.query;
-    console.log('Fetching items, category filter:', category); // Добавьте эту строку
+    console.log('Fetching items, category filter:', category);
 
     try {
         let query = 'SELECT * FROM resources';
         const params = [];
 
         if (category) {
-            query += ' WHERE category_id = $1';  // Исправлено на category_id
+            query += ' WHERE category_id = $1';
             params.push(category);
         }
 
-        console.log('Executing query:', query, params); // И эту
+        console.log('Executing query:', query, params);
         const result = await pool.query(query, params);
-        console.log('Query result:', result.rows); // И эту
+        console.log('Query result:', result.rows);
 
         res.json(result.rows);
     } catch (err) {
