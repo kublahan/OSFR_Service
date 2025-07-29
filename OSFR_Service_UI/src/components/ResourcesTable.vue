@@ -1,78 +1,85 @@
-<template>
-    <div class="table-responsive table-container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="col-category">Категория</th>
-                    <th class="col-name">Наименование</th>
-                    <th class="col-service">Сервис</th>
-                    <th class="col-action">Действие</th>
-                </tr>
-            </thead>
-            <!-- <tbody>
-                <tr v-for="resource in resources" :key="resource.id">
-                    <td>{{ resource.category }}</td>
-                    <td>{{ resource.name }}</td>
-                    <td>{{ resource.service }}</td>
-                    <td>
-                        <button
-                        @click="openResource(resource.url)"
-                        class="btn btn-primary btn-sm">
-                            Открыть
-                        </button>
-                    </td>
-                </tr>
-            </tbody> -->
-        <tbody>
-        <tr>
-          <td class="category">Основные ресурсы</td>
-          <td class="name">Корпоративный портал социального фонда России</td>
-          <td>(Портал СФР)</td>
-          <td><button class="action-btn">Открыть</button></td>
-        </tr>
-        <tr>
-          <td class="category">Основные ресурсы</td>
-          <td class="name">Система электронного документооборота</td>
-          <td>(СЭД)</td>
-          <td><button class="action-btn">Открыть</button></td>
-        </tr>
-        <tr>
-          <td class="category">Коммуникационные сервисы</td>
-          <td class="name">Информационная аналитическая система</td>
-          <td>(ИАС)</td>
-          <td><button class="action-btn">Открыть</button></td>
-        </tr>
-        <tr>
-          <td class="category">Ссылки ПС</td>
-          <td class="name">Система межведомственного взаимодействия</td>
-          <td>(СМЭВ)</td>
-          <td><button class="action-btn">Открыть</button></td>
-        </tr>
-        <tr>
-          <td class="category">Парус</td>
-          <td class="name">Портал фонда пенсионного и социального страхования РФ</td>
-          <td>(Портал ФСС)</td>
-          <td><button class="action-btn">Открыть</button></td>
-        </tr>
-      </tbody>
-        </table>
-    </div>
-</template>
-
+// ResourcesTable.vue
 <script lang="ts">
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
 
-export default {
-  name: 'ResourcesTable'
-};
+interface TableItem {
+  id: number | string;
+  category_id: number | string;
+  category_name?: string; // Сделаем необязательным, если он не всегда приходит напрямую
+  name: string;
+  service: string;
+  url: string;
+}
+
+export default defineComponent({
+  name: 'ResourcesTable',
+  props: {
+    items: {
+      type: Array as PropType<TableItem[]>,
+      required: true,
+      default: () => [],
+    },
+  },
+  watch: {
+    // Добавьте watcher для отслеживания изменений в пропсе items
+    items: {
+      handler(newItems) {
+        console.log('ResourcesTable: received items prop update. First item category_name:', newItems[0]?.category_name);
+        // Вы можете даже вывести весь массив, чтобы убедиться в наличии category_name
+        // console.log('ResourcesTable: received items:', newItems);
+      },
+      deep: true, // Глубокое наблюдение за изменениями в массиве объектов
+      immediate: true // Запустить хэндлер сразу после инициализации
+    }
+  }
+});
 </script>
 
+<template>
+  <div class="table-responsive table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-category">Категория</th>
+          <th class="col-name">Наименование</th>
+          <th class="col-service">Сервис</th>
+          <th class="col-action">Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in items" :key="item.id">
+          <td class="category">{{ item.category_name }}</td> 
+          <td class="name">{{ item.name }}</td>
+          <td>{{ item.service }}</td>
+          <td>
+            <a :href="item.url" target="_blank" class="action-btn">
+              Открыть
+            </a>
+          </td>
+        </tr>
+        <tr v-if="items.length === 0">
+          <td colspan="4" style="text-align: center; padding: 20px;">
+            Нет данных для отображения.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
 <style scoped>
+/* Все ваши существующие стили сохранены без изменений */
+
 /* Основной контейнер таблицы */
 .table-container {
   margin: 20px auto;
   border-radius: 8px;
   overflow: hidden;
   width: 118.75rem;
+  /* Добавлены правила для адаптивности, чтобы таблица не выходила за пределы экрана на маленьких устройствах */
+  max-width: 100%;
+  overflow-x: auto; /* Добавляет горизонтальный скролл, если таблица шире экрана */
 }
 
 /* Стили таблицы */
@@ -88,7 +95,7 @@ export default {
   font-weight: 600;
   font-size: 25px;
   text-align: center; /* Все заголовки по центру */
-  padding: 12px 16px;
+  padding: 12px 16px; /* Добавлен padding для заголовков */
 }
 
 /* Общие стили ячеек */
@@ -116,6 +123,7 @@ export default {
   cursor: pointer;
   font-size: 25px;
   font-family: 'Inter-Regular';
+  text-decoration: none; /* Убираем подчеркивание у ссылки, чтобы она выглядела как кнопка */
 }
 
 /* Цвета для категорий */
