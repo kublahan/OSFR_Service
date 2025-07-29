@@ -83,70 +83,78 @@ export default {
 
 /* Заголовки столбцов */
 .table th {
-  background-color: #D6E9FD; /* Темно-синий */
+  background-color: #D6E9FD;
   color: #1A185C;
   font-weight: 600;
   font-size: 25px;
+  text-align: center; /* Все заголовки по центру */
+  padding: 12px 16px;
 }
 
-/* Ячейки таблицы */
+/* Общие стили ячеек */
 .table td {
   padding: 12px 16px;
   border-bottom: 1px solid #e0e0e0;
   color: #000000;
   font-size: 25px;
   font-family: 'Inter-Regular';
-  text-align: center;
+  text-align: center; /* По умолчанию все ячейки по центру */
+}
+
+/* Специальное выравнивание для Наименования */
+.table td.name {
+  text-align: left; /* Только содержимое Наименования слева */
 }
 
 /* Стили кнопки */
 .action-btn {
   padding: 6px 12px;
   background-color: transparent;
-  border: none;                
-  box-shadow: none; 
-  color: #1150B0;
   border: none;
+  box-shadow: none;
+  color: #1150B0;
   cursor: pointer;
   font-size: 25px;
   font-family: 'Inter-Regular';
-
 }
 
+/* Цвета для категорий */
 td.category {
-    color: #1A185C;
+  color: #1A185C;
 }
 
-td.name {
-    text-align: left;
-}
-
+/* Чередование цветов строк */
 .table tbody tr:nth-child(even) {
-    background-color: #EDF6FF;
+  background-color: #EDF6FF;
 }
 
 .table tbody tr:nth-child(odd) {
-    background-color: #FFFFFF;
+  background-color: #FFFFFF;
 }
 
+/* Ширины колонок */
 .table th.col-category,
 .table td.category {
   width: 15.4375rem;
   padding-right: 4.75rem;
-  text-align: center; /* Например, 250 пикселей для "Категории" */
 }
 
 .table th.col-name,
 .table td.name {
   width: 45.5625rem;
-  text-align: left; /* Например, 500 пикселей для "Наименования" */
+  /* Заголовок по центру, содержимое слева */
 }
 
 .table th.col-service {
-  width: 150px; /* Например, 150 пикселей для "Сервиса" */
+  width: 150px;
 }
 
 .table th.col-action {
-  width: 120px; /* Например, 120 пикселей для "Действия" */
+  width: 120px;
+}
+
+/* Гарантируем, что заголовок Наименования будет по центру */
+.table th.col-name {
+  text-align: center;
 }
 </style>
