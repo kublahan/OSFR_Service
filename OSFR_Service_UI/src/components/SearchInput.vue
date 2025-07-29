@@ -1,15 +1,15 @@
+<template>
+
+      <input type="text" class="search-input" placeholder="Поиск..."></input>
+
+</template>
+
 <script>
 export default {
   name: 'SearchInput',
 
 };
 </script>
-
-<template>
-
-      <input type="text" class="search-input" placeholder="Поиск..."></input>
-
-</template>
 
 <style>
 
