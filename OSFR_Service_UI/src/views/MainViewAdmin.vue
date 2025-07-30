@@ -14,6 +14,9 @@ interface TableItem {
   url: string;
 }
 
+ const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
+
+
 export default defineComponent({
   name: 'MainViewAdmin',
   components: {
@@ -31,62 +34,37 @@ export default defineComponent({
     };
   },
   async created() {
-    console.log('MainView: created hook started.');
     await this.fetchCategories();
-    console.log('MainView: Categories fetched. Current categories state:', this.categories);
     await this.fetchItems();
-    console.log('MainView: Items fetched. Final items state (with category names):', this.items);
   },
+
+ 
   methods: {
     async fetchCategories() {
       try {
-        console.log('fetchCategories: Attempting to fetch categories from http://localhost:3000/api/categories');
-        const response = await axios.get<{id: number, name: string}[]>('http://localhost:3000/api/categories');
+        const response = await axios.get<{id: number, name: string}[]>(`${API_BASE_URL}/api/categories`);
         this.categories = response.data;
-        console.log('fetchCategories: Successfully fetched categories:', this.categories);
-        if (this.categories.length === 0) {
-          console.warn('fetchCategories: No categories returned by the API!');
-        }
       } catch (error) {
-        console.error('fetchCategories: Error fetching categories:', error);
+        console.error('Error fetching categories:', error);
       }
     },
     async fetchItems() {
       try {
-        console.log('fetchItems: Attempting to fetch items from http://localhost:3000/api/items');
-        const response = await axios.get<TableItem[]>('http://localhost:3000/api/items');
+        const response = await axios.get<TableItem[]>(`${API_BASE_URL}/api/items`);
         
-        console.log('fetchItems: Raw items from API:', response.data);
-        console.log('fetchItems: Categories available for mapping:', this.categories); // Проверим категории перед маппингом
-
-        // Добавляем названия категорий к каждому элементу
-        this.items = response.data.map(item => {
-          const categoryName = this.getCategoryName(item.category_id);
-          console.log(`fetchItems: Mapping item ID ${item.id}, category_id ${item.category_id} -> category_name: ${categoryName}`);
-          return {
-            ...item,
-            category_name: categoryName
-          };
-        });
+        this.items = response.data.map(item => ({
+          ...item,
+          category_name: this.getCategoryName(item.category_id)
+        }));
+        
         this.filteredItems = [...this.items];
-        console.log('fetchItems: Final processed items with category names:', this.items);
       } catch (error) {
-        console.error('fetchItems: Error fetching items:', error);
+        console.error('Error fetching items:', error);
       }
     },
     getCategoryName(categoryId: number | string): string {
-      console.log(`getCategoryName: Looking for category ID: ${categoryId} (type: ${typeof categoryId})`);
-      console.log('getCategoryName: Available categories:', this.categories.map(c => ({ id: c.id, type: typeof c.id })));
-
-
       const category = this.categories.find(c => c.id == categoryId);
-      
-      if (!category) {
-        console.warn(`getCategoryName: Category with ID ${categoryId} NOT FOUND in loaded categories. Returning fallback name.`);
-        return `Категория ${categoryId}`;
-      }
-      console.log(`getCategoryName: Found category for ID ${categoryId}: ${category.name}`);
-      return category.name;
+      return category ? category.name : `Категория ${categoryId}`;
     },
     handleSearch(term: string) {
       this.searchTerm = term;
@@ -100,13 +78,11 @@ export default defineComponent({
       let result = [...this.items];
       
       if (this.selectedCategory !== null) {
-        console.log(`applyFilters: Filtering by category ID: ${this.selectedCategory} (type: ${typeof this.selectedCategory})`);
         result = result.filter(item => item.category_id == this.selectedCategory);
       }
       
       if (this.searchTerm) {
         const term = this.searchTerm.toLowerCase();
-        console.log(`applyFilters: Filtering by search term: "${term}"`);
         result = result.filter(item => 
           item.name.toLowerCase().includes(term) || 
           item.service.toLowerCase().includes(term) ||
@@ -115,7 +91,6 @@ export default defineComponent({
       }
       
       this.filteredItems = result;
-      console.log('applyFilters: Filtered items:', this.filteredItems);
     }
   }
 });

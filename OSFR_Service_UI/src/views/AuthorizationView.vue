@@ -1,5 +1,5 @@
 <template>
-  <body>
+  <div class="background">
   <div class="name-banner">
     Корпоративный ресурс ОСФР <br />по г. Москве и Московской области
   </div>
@@ -23,7 +23,8 @@
     <button class="enter-btn">Войти</button>
     <button class="back-btn" @click="goBack">Назад</button>
   </div>
-  </body>
+  </div>
+
 </template>
 
 <script>
@@ -39,18 +40,18 @@ export default {
 </script>
 
 <style scoped>
-body {
-  margin: 0;
+.background {
   background: linear-gradient(
     to right,
-    #FFFFFF 100%,
-    #D6E9FD 100%
+    #FFFFFF,
+    #D6E9FD
   );
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
+  min-height: 100vh; /* Растягиваем на всю высоту окна просмотра */
+  width: 100vw; /* Растягиваем на всю ширину окна просмотра */
+  display: flex; /* Используем flexbox для центрирования содержимого */
+  flex-direction: column; /* Элементы внутри будут располагаться в колонку */
+  align-items: center; /* Центрируем по горизонтали */
+  justify-content: flex-start;
 }
 
 .name-banner {
