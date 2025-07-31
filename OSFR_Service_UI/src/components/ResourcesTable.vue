@@ -28,8 +28,8 @@ export default defineComponent({
         console.log('ResourcesTable: received items prop update. First item category_name:', newItems[0]?.category_name);
 
       },
-      deep: true, // Глубокое наблюдение за изменениями в массиве объектов
-      immediate: true // Запустить хэндлер сразу после инициализации
+      deep: true,
+      immediate: true
     }
   }
 });
@@ -68,51 +68,49 @@ export default defineComponent({
 </template>
 
 <style scoped>
-/* Все ваши существующие стили сохранены без изменений */
 
-/* Основной контейнер таблицы */
+
 .table-container {
   margin: 20px auto;
   border-radius: 8px;
   overflow: hidden;
   width: 118.75rem;
-  /* Добавлены правила для адаптивности, чтобы таблица не выходила за пределы экрана на маленьких устройствах */
   max-width: 100%;
-  overflow-x: auto; /* Добавляет горизонтальный скролл, если таблица шире экрана */
+  overflow-x: auto;
 }
 
-/* Стили таблицы */
+
 .table {
   width: 100%;
   border-collapse: collapse;
 }
 
-/* Заголовки столбцов */
+
 .table th {
   background-color: #D6E9FD;
   color: #1A185C;
   font-weight: 600;
   font-size: 25px;
-  text-align: center; /* Все заголовки по центру */
-  padding: 12px 16px; /* Добавлен padding для заголовков */
+  text-align: center;
+  padding: 12px 16px;
 }
 
-/* Общие стили ячеек */
+
 .table td {
   padding: 12px 16px;
   border-bottom: 1px solid #e0e0e0;
   color: #000000;
   font-size: 25px;
   font-family: 'Inter-Regular';
-  text-align: center; /* По умолчанию все ячейки по центру */
+  text-align: center;
 }
 
-/* Специальное выравнивание для Наименования */
+
 .table td.name {
-  text-align: left; /* Только содержимое Наименования слева */
+  text-align: left;
 }
 
-/* Стили кнопки */
+
 .action-btn {
   padding: 6px 12px;
   background-color: transparent;
@@ -122,15 +120,15 @@ export default defineComponent({
   cursor: pointer;
   font-size: 25px;
   font-family: 'Inter-Regular';
-  text-decoration: none; /* Убираем подчеркивание у ссылки, чтобы она выглядела как кнопка */
+  text-decoration: none;
 }
 
-/* Цвета для категорий */
+
 td.category {
   color: #1A185C;
 }
 
-/* Чередование цветов строк */
+
 .table tbody tr:nth-child(even) {
   background-color: #EDF6FF;
 }
@@ -139,7 +137,7 @@ td.category {
   background-color: #FFFFFF;
 }
 
-/* Ширины колонок */
+
 .table th.col-category,
 .table td.category {
   width: 15.4375rem;
@@ -149,7 +147,7 @@ td.category {
 .table th.col-name,
 .table td.name {
   width: 45.5625rem;
-  /* Заголовок по центру, содержимое слева */
+
 }
 
 .table th.col-service {
@@ -160,7 +158,6 @@ td.category {
   width: 120px;
 }
 
-/* Гарантируем, что заголовок Наименования будет по центру */
 .table th.col-name {
   text-align: center;
 }

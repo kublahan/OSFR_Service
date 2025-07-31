@@ -3,6 +3,8 @@
     "target": "es2020",
     "module": "commonjs",
     "baseUrl": "./src",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "paths": {
       "@/*": ["./*"]
     },

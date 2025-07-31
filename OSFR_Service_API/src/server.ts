@@ -1,11 +1,27 @@
-import app from '@/app';
+import app from './app';
 import dotenv from 'dotenv';
+import { AppDataSource } from './config/data-source';
 
-dotenv.config(); // Загружаем переменные окружения
+dotenv.config();
 
-const PORT = process.env.PORT || 3000; // Получаем порт из переменных окружения
+const PORT = process.env.PORT || 3000; 
 
-// Запускаем Express-приложение на прослушивание порта
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+
+async function startServer() {
+  try {
+
+    await AppDataSource.initialize();
+
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+    
+  } catch (error) {
+    console.error('❌ Failed to start:', error);
+    process.exit(1);
+  }
+}
+
+
+startServer();

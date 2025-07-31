@@ -1,41 +1,56 @@
 <template>
   <div class="background">
-  <div class="name-banner">
-    Корпоративный ресурс ОСФР <br />по г. Москве и Московской области
-  </div>
-
-  <div class="auth-form">
-    <img src="/Logo_OSFR.svg" alt="logo" class="logo-auth" />
-    <div class="auth-title">Авторизация</div>
-    <div class="input-group">
-      <!-- <img src="/icons/user-icon.svg" alt="Login Icon" class="input-icon" /> -->
-      <input type="text" placeholder="Логин" class="login-input" />
+    <div class="name-banner">
+      Корпоративный ресурс ОСФР <br />по г. Москве и Московской области
     </div>
-    <div class="input-group">
-      <!-- <img src="/icons/lock-icon.svg" alt="Password Icon" class="input-icon" /> -->
-      <input type="password" placeholder="Пароль" class="password-input" />
-      <!-- <img
-        src="/icons/eye-icon.svg"
-        alt="Show Password Icon"
-        class="password-toggle-icon"
-      /> -->
-    </div>
-    <button class="enter-btn">Войти</button>
-    <button class="back-btn" @click="goBack">Назад</button>
-  </div>
-  </div>
 
+    <div class="auth-form">
+      <img src="/Logo_OSFR.svg" alt="logo" class="logo-auth" />
+      <div class="auth-title">Авторизация</div>
+      <div class="input-group">
+        <input type="text" placeholder="Логин" class="login-input" v-model="username" />
+      </div>
+      <div class="input-group">
+        <input type="password" placeholder="Пароль" class="password-input" v-model="password" />
+      </div>
+      <button class="enter-btn" @click="handleLogin">Войти</button>
+      <button class="back-btn" @click="goBack">Назад</button>
+      <p v-if="error" class="error-message">{{ error }}</p>
+    </div>
+  </div>
 </template>
 
 <script>
+import { loginAdmin } from '@/api/auth';
+
 export default {
+  name: 'AuthorizationView',
+  data() {
+    return {
+      username: '',
+      password: '',
+      error: null,
+    };
+  },
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+    async handleLogin() {
+    this.error = null;
+    try {
+      const data = await loginAdmin(this.username.trim(), this.password.trim());
+      localStorage.setItem('adminToken', data.token);
+      
+
+      this.$router.push({ name: 'admin' });
+      
+    } catch (err) {
+      console.error('Ошибка входа:', err);
+      this.error = err.response?.data?.msg || 'Неверные учетные данные или ошибка сервера.';
     }
   },
-  name: 'AuthorizationView',
-  components: {},
+  },
 };
 </script>
 
@@ -46,11 +61,11 @@ export default {
     #FFFFFF,
     #D6E9FD
   );
-  min-height: 100vh; /* Растягиваем на всю высоту окна просмотра */
-  width: 100vw; /* Растягиваем на всю ширину окна просмотра */
-  display: flex; /* Используем flexbox для центрирования содержимого */
-  flex-direction: column; /* Элементы внутри будут располагаться в колонку */
-  align-items: center; /* Центрируем по горизонтали */
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
 }
 

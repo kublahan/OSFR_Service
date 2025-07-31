@@ -61,7 +61,7 @@ export default {
   },
   async created() {
     try {
-      // Запрос к бэкенду для получения категорий
+
       const response = await axios.get('http://localhost:3000/api/categories');
 
       this.categories = response.data;

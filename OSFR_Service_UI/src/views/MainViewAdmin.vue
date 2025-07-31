@@ -102,9 +102,7 @@ export default defineComponent({
       <img src="/Logo_OSFR.svg" alt="OSFR Logo" class="logo">
     </div>
 
-    <router-link :to="{ name: 'auth'}">
-      <button class="login-button">Войти</button>
-    </router-link>
+    
     
   </header>
 
@@ -144,21 +142,7 @@ export default defineComponent({
   margin-left: 33px;
 }
 
-.login-button {
-    background-color: #D6E9FD;
-    color: #191F66;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.3125rem;
-    cursor: pointer;
-    width: 7.6875rem;
-    height: 2.9375rem;
-    font-size: 1.5625rem;
-    
-    margin-right: 34px;
-}
+
 
 .name-banner {
     width: 100%;
