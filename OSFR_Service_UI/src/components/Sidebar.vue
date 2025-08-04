@@ -1,0 +1,111 @@
+<template>
+  <div class="sidebar">
+    <div class="sidebar-head">
+      Корпоративный ресурс ОСФР
+      <br>по г.Москве и Московской области
+    </div>
+
+
+    <div
+        class="sidebar-category"
+        :class="{ 'active': selectedCategoryId === null }"
+        @click="selectCategory(null)"
+    >
+        Все категории
+    </div>
+
+
+    <div 
+      v-for="category in categories"
+      :key="category.id"
+      class="sidebar-category"
+      :class="{ 'active': selectedCategoryId === category.id }"
+      @click="selectCategory(category.id)"
+    >
+      {{ category.name }}
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, type PropType } from 'vue';
+
+export default defineComponent({
+  name: 'Sidebar',
+  props: {
+    categories: {
+      type: Array as PropType<{id: number, name: string}[]>,
+      required: true,
+      default: () => []
+    }
+  },
+  data() {
+    return {
+      selectedCategoryId: null as number | null
+    };
+  },
+  methods: {
+    selectCategory(categoryId: number | null) {
+      this.selectedCategoryId = categoryId;
+      this.$emit('select-category', categoryId);
+    }
+  },
+
+  emits: ['select-category']
+});
+</script>
+
+<style scoped>
+.sidebar {
+  width: 25.625rem;
+  background: linear-gradient(
+    to right,
+    #0983FE 0%,
+    #1057BC 37%,
+    #1A185C 100%
+);
+  color: white;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: 1rem;
+  text-align: center;
+}
+
+.sidebar-head {
+  font-size: 32px;
+  font-family: 'Lato-SemiBold';
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  
+  letter-spacing: 0.03em;
+}
+
+.sidebar-category {
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  font-size: 28px;
+}
+
+.sidebar-category:hover {
+  background: linear-gradient(
+    to right,
+    #5CA4FC 0%,
+    #3C8CEE 100%
+);
+}
+
+.sidebar-category.active {
+  background: linear-gradient(
+    to right,
+    #5CA4FC 0%,
+    #3C8CEE 100%
+);
+  color: white;
+  font-weight: bold;
+}
+</style>

@@ -103,7 +103,6 @@ export default {
   position: relative;
   width: 29.4631rem;
   margin-left: 1rem;
-  margin-top: 2.25rem;
   font-family: 'Inter-Regular';
   z-index: 1000;
 }

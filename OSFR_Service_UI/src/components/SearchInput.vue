@@ -1,5 +1,6 @@
 <template>
   <input
+    :style="{ width: customWidth }"
     type="text"
     v-model="searchTerm"
     @input="emitSearch"
@@ -8,8 +9,10 @@
   />
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   name: 'SearchInput',
   data() {
     return {
@@ -21,20 +24,26 @@ export default {
       this.$emit('search', this.searchTerm);
     },
   },
-};
+  props: {
+    customWidth: {
+      type: String,
+      default: '66.5rem'
+    }
+  }
+});
 </script>
 
 <style>
 
 
 .search-input {
-  width: 66.5rem;
+  
   height: 3.6875rem;
   background-color: #D6E9FD;
   border: none;
   border-radius: 0.625rem;
   margin-left: 9.375rem;
-  margin-top: 2.5rem;
+
 
   background-image: url('@/assets/icons/Search_Magnifying_Glass.svg');
   background-repeat: no-repeat;

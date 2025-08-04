@@ -74,7 +74,6 @@ export default defineComponent({
   margin: 20px auto;
   border-radius: 8px;
   overflow: hidden;
-  width: 118.75rem;
   max-width: 100%;
   overflow-x: auto;
 }

@@ -3,7 +3,7 @@ import pool from '../models';
 
 export const getCategories = async (req: Request, res: Response) => {
     try {
-        const result = await pool.query('SELECT id, name FROM categories ORDER BY name');
+        const result = await pool.query('SELECT id, name FROM categories');
         console.log('Backend: Fetched categories:', result.rows);
         res.json(result.rows);
     } catch (err) {
