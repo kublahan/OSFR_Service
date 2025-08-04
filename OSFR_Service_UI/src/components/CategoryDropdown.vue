@@ -70,16 +70,13 @@ export default {
     }
   },
   methods: {
-    /**
-     * Переключает состояние открытия/закрытия выпадающего списка.
-     */
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },
     /**
      * Выбирает категорию и закрывает выпадающий список.
-     * @param {number|null} id - ID выбранной категории.
-     * @param {string} name - Имя выбранной категории.
+     * @param {number|null} id
+     * @param {string} name
      */
     selectCategory(id, name = 'Все категории') {
       this.selectedCategoryId = id;

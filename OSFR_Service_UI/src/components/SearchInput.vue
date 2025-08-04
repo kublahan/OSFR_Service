@@ -1,6 +1,6 @@
 <template>
   <input
-    :style="{ width: customWidth }"
+    :style="{ width: customWidth, marginLeft: customMarginLeft }"
     type="text"
     v-model="searchTerm"
     @input="emitSearch"
@@ -28,12 +28,16 @@ export default defineComponent({
     customWidth: {
       type: String,
       default: '66.5rem'
+    },
+    customMarginLeft: {
+      type: String,
+      default: '9.375rem'
     }
   }
 });
 </script>
 
-<style>
+<style scoped>
 
 
 .search-input {
@@ -42,7 +46,6 @@ export default defineComponent({
   background-color: #D6E9FD;
   border: none;
   border-radius: 0.625rem;
-  margin-left: 9.375rem;
 
 
   background-image: url('@/assets/icons/Search_Magnifying_Glass.svg');
@@ -53,6 +56,7 @@ export default defineComponent({
 
   font-family: 'Inter-Regular';
   font-size: 1.5625rem;
+  
 
 }
 

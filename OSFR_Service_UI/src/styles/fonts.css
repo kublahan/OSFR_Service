@@ -11,3 +11,10 @@
     font-style: normal;
     font-weight: normal;
 }
+
+@font-face {
+    font-family: 'Inter-Extra-Bold';
+    src: url(@/assets/fonts/inter-extra-bold.otf) format('opentype');
+    font-style: normal;
+    font-weight: normal;
+}

@@ -1,4 +1,3 @@
-// ResourcesTable.vue
 <script lang="ts">
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
@@ -18,7 +17,6 @@ export default defineComponent({
     items: {
       type: Array as PropType<TableItem[]>,
       required: true,
-      default: () => [],
     },
   },
   watch: {

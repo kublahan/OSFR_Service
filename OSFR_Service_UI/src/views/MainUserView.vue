@@ -18,6 +18,7 @@
           <SearchInput 
             @search="handleSearch"
             :customWidth="'72.4375rem'"
+            :customMarginLeft="'1.8125rem'"
             />
           
           
@@ -27,9 +28,20 @@
           
           
         </div>
-        
-        <ResourcesButton :items="filteredItems"/>
-        <!-- <ResourcesTable :items="filteredItems"/> -->
+
+        <div class="selected-category">
+          <h2>
+            {{ getCurrentCategoryName() }}
+            <span v-if="searchTerm"> "{{ searchTerm }}"</span>
+          </h2>
+        </div>
+
+
+        <div class="resources-grid">
+          <ResourcesButton v-for="item in filteredItems" 
+            :key="item.id" 
+            :item="item"/>
+        </div>
       </div>
     </div>
   </div>
@@ -126,6 +138,17 @@ export default defineComponent({
       }
       
       this.filteredItems = result;
+    },
+
+    getCurrentCategoryName() {
+    if (this.searchTerm) {
+      return this.selectedCategory 
+        ? `Результаты поиска в ${this.getCategoryName(this.selectedCategory)}` 
+        : 'Результаты поиска';
+    }
+    return this.selectedCategory 
+      ? this.getCategoryName(this.selectedCategory)
+      : 'Все категории';
     }
   }
 });
@@ -141,24 +164,27 @@ export default defineComponent({
 
 .main-layout {
   display: grid;
-  grid-template-columns: 25.625rem 1fr; /* Сайдбар 200px, контент - остальное */
-  flex: 1;
+  grid-template-columns: 25.625rem 1fr;
 }
 
 .content-area {
-  flex: 1;
-  padding: 2rem;
   background-color: #f5f5f5;
 }
 
 .search-container {
-  align-items: center; /* Выравнивает по центру по вертикали */
+  display: flex;
+  align-items: center;
   margin-bottom: 2rem;
-  gap: 1rem;
   margin-top: 2.25rem;
-  justify-content: right;
+  width: 94.375rem;
 }
 
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
 
 
 .login-button {
@@ -174,11 +200,31 @@ export default defineComponent({
 
   margin-right: 1.6rem;
   margin-left: 2.1875rem;
+
+  flex-wrap: nowrap;
 }
 
 .logo {
   height: 3.6875rem;
   width: 4.5rem;
-  margin-left: 35px;
+  margin-left: 2.5625rem;
+}
+
+.selected-category {
+  padding: 1rem 2.5625rem;
+  margin-bottom: 1rem;
+  font-family: 'Inter-Extra-Bold';
+  color: #191F66;
+}
+
+.selected-category h2 {
+  font-size: 2.75rem;
+  color: #191F66;
+  font-weight: 600;
+}
+
+.selected-category span {
+  color: #1150B0;
+  font-weight: normal;
 }
 </style>

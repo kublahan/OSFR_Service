@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div class="sidebar-head">
       Корпоративный ресурс ОСФР
-      <br>по г.Москве и Московской области
+      <br>по г. Москве и Московской области
     </div>
 
 
@@ -105,7 +105,5 @@ export default defineComponent({
     #5CA4FC 0%,
     #3C8CEE 100%
 );
-  color: white;
-  font-weight: bold;
 }
 </style>
