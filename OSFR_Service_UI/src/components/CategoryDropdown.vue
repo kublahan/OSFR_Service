@@ -54,7 +54,7 @@ export default {
     };
   },
   computed: {
-    // Вычисляемое свойство для отображения выбранной категории в заголовке
+
     displaySelectedCategory() {
       return this.selectedCategoryName;
     }

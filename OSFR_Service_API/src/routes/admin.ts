@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import { adminAuthMiddleware } from '@/middleware/auth';
 import asyncHandler from 'express-async-handler';
-
+import { 
+    createResource,
+    getResourceById,
+    updateResource,
+    deleteResource
+} from '../controllers/dataController';
 
 console.log('--- adminRoutes is being loaded ---');
 
@@ -23,5 +28,10 @@ router.use(adminAuthMiddleware);
 router.get('/dashboard', asyncHandler(async (req, res) => {
   res.json({ message: 'Страница админа' });
 }));
+
+router.get('/resources/:id', getResourceById);
+router.post('/resources', createResource);
+router.put('/resources/:id', updateResource);
+router.delete('/resources/:id', deleteResource);
 
 export default router;

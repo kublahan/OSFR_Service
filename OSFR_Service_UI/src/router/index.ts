@@ -2,51 +2,59 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MainViewAdmin from '@/views/MainViewAdmin.vue';
 import AuthorizationView from '@/views/AuthorizationView.vue';
 import MainUserView from '@/views/MainUserView.vue';
+import ResourcesEditView from '../views/ResourcesEditView.vue';
+
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: MainUserView,
+    meta: {
+      windowTitle: 'Главная страница',
+    },
+  },
+  {
+    path: '/auth',
+    name: 'auth',
+    component: AuthorizationView,
+    meta: {
+      windowTitle: 'Авторизация',
+    },
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: MainViewAdmin,
+    meta: {
+      windowTitle: 'Панель администратора',
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/admin/resources/add',
+    name: 'resource-add',
+    component: ResourcesEditView,
+    meta: { 
+      requiresAuth: true,
+      windowTitle: 'Добавить ресурс'
+    }
+  },
+  {
+    path: '/admin/resources/edit/:id',
+    name: 'resource-edit',
+    component: ResourcesEditView,
+    meta: { 
+      requiresAuth: true,
+      windowTitle: 'Редактировать ресурс'
+    },
+    props: true, 
+  },
+];
+
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: MainUserView,
-      meta: {
-        windowTitle: 'Главная страница',
-
-      },
-    },
-    {
-      path: '/auth',
-      name: 'auth',
-      component: AuthorizationView,
-      meta: {
-        windowTitle: 'Авторизация',
-      },
-    },
-
-    {
-      path: '/admin',
-      name: 'admin',
-      component: MainViewAdmin,
-      meta: {
-        windowTitle: 'Панель администратора',
-        requiresAuth: true,
-      },
-    },
-  ],
-});
-
-router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('adminToken');
-  const isAuthenticated = !!token;
-
-  if (to.meta.requiresAuth && !isAuthenticated) {
-
-    next({ name: 'auth' });
-  }  else {
-
-    next();
-  }
+  routes,
 });
 
 export default router;

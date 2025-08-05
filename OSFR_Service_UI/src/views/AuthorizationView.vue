@@ -22,6 +22,7 @@
 
 <script>
 import { loginAdmin } from '@/api/auth';
+import { setAuthToken } from '../api/auth';
 
 export default {
   name: 'AuthorizationView',
@@ -42,6 +43,7 @@ export default {
       const data = await loginAdmin(this.username.trim(), this.password.trim());
       localStorage.setItem('adminToken', data.token);
       
+      setAuthToken(data.token);
 
       this.$router.push({ name: 'admin' });
       

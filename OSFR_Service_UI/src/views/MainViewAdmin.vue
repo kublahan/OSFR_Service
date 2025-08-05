@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import axios from 'axios';
+import api from '@/api/auth';
 import SearchInput from '@/components/SearchInput.vue';
 import CategoryDropdown from '@/components/CategoryDropdown.vue';
 import ResourcesTable from '@/components/ResourcesTable.vue';
@@ -14,7 +14,7 @@ interface TableItem {
   url: string;
 }
 
- const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
+//  const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
 
 
 export default defineComponent({
@@ -42,7 +42,7 @@ export default defineComponent({
   methods: {
     async fetchCategories() {
       try {
-        const response = await axios.get<{id: number, name: string}[]>(`${API_BASE_URL}/api/categories`);
+        const response = await api.get<{id: number, name: string}[]>(`/categories`);
         this.categories = response.data;
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -50,7 +50,7 @@ export default defineComponent({
     },
     async fetchItems() {
       try {
-        const response = await axios.get<TableItem[]>(`${API_BASE_URL}/api/items`);
+        const response = await api.get<TableItem[]>(`/items`);
         
         this.items = response.data.map(item => ({
           ...item,
@@ -114,13 +114,21 @@ export default defineComponent({
     Корпоративный ресурс ОСФР <br>по г. Москве и Московской области
   </div>
 
+  <div class="add-resource-container">
+    <router-link :to="{ name: 'resource-add' }" class="add-resource-btn">
+      Добавить ресурс
+    </router-link>
+  </div>
   <div class="search-category">
     <SearchInput @search="handleSearch"/>
     <CategoryDropdown @update:category="handleCategoryChange"/>
   </div>
 
   <div class="resources-table">
-    <ResourcesTable :items="filteredItems"/>
+    <ResourcesTable 
+    :items="filteredItems"
+    @resource-deleted="fetchItems"
+    />
   </div>
 </template>
 
@@ -164,6 +172,8 @@ export default defineComponent({
     box-sizing: border-box;
     padding: 1.375rem;
     text-align: center;
+
+    line-height: 1.3;
 }
 
 .search-category {

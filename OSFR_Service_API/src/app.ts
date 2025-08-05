@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { errorHandler } from '@/middleware/errorHandler';
 import { notFoundHandler } from '@/middleware/notFoundHandler';
+import { AppDataSource } from './config/data-source';
 
 
 dotenv.config();
@@ -24,6 +25,13 @@ app.use(cors({
 
 
 app.use(express.json({ limit: '10kb' }));
+
+app.use((req, res, next) => {
+  if (!AppDataSource.isInitialized) {
+    return res.status(503).json({ msg: 'Сервер недоступен, база данных не инициализирована' });
+  }
+  next();
+});
 
 
 app.use('/api', publicRoutes);

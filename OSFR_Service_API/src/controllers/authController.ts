@@ -21,7 +21,7 @@ export const loginAdmin = async (req: Request, res: Response) => {
             return res.status(401).json({ msg: 'Неверные учетные данные' });
         }
 
-        // Временная проверка пароля без хэширования
+
         if (admin.password !== password) {
             return res.status(401).json({ msg: 'Неверные учетные данные' });
         }
