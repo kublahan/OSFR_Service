@@ -1,28 +1,37 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import api from '@/api/auth';
 import SearchInput from '@/components/SearchInput.vue';
 import CategoryDropdown from '@/components/CategoryDropdown.vue';
-import ResourcesTable from '@/components/ResourcesTable.vue';
+import MainTable from '@/components/MainTable.vue';
+
+
+interface InstructionItem {
+    id: number | string;
+    category_id: number | string;
+    category_name?: string;
+    name: string;
+    content: string;
+    type: 'instruction';
+}
+
 
 interface TableItem {
   id: number | string;
   category_id: number | string;
   category_name?: string;
   name: string;
-  service: string;
-  url: string;
+  service: string | null;
+  url: string | null;
+  type: 'resource' | 'instruction';
 }
-
-//  const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
-
 
 export default defineComponent({
   name: 'MainViewAdmin',
   components: {
     SearchInput,
     CategoryDropdown,
-    ResourcesTable
+    MainTable
   },
   data() {
     return {
@@ -38,7 +47,6 @@ export default defineComponent({
     await this.fetchItems();
   },
 
- 
   methods: {
     async fetchCategories() {
       try {
@@ -50,14 +58,14 @@ export default defineComponent({
     },
     async fetchItems() {
       try {
-        const response = await api.get<TableItem[]>(`/items`);
+        const response = await api.get<TableItem[]>(`/admin/all-items`);
         
         this.items = response.data.map(item => ({
           ...item,
           category_name: this.getCategoryName(item.category_id)
         }));
         
-        this.filteredItems = [...this.items];
+        this.applyFilters();
       } catch (error) {
         console.error('Error fetching items:', error);
       }
@@ -85,7 +93,7 @@ export default defineComponent({
         const term = this.searchTerm.toLowerCase();
         result = result.filter(item => 
           item.name.toLowerCase().includes(term) || 
-          item.service.toLowerCase().includes(term) ||
+          (item.service && item.service.toLowerCase().includes(term)) ||
           (item.category_name && item.category_name.toLowerCase().includes(term))
         );
       }
@@ -105,9 +113,6 @@ export default defineComponent({
     <router-link :to="{ name: 'auth'}">
       <button class="admin-btn">Админ</button>
     </router-link>
-
-    
-    
   </header>
 
   <div class="name-banner">
@@ -118,19 +123,25 @@ export default defineComponent({
     <router-link :to="{ name: 'resource-add' }" class="add-resource-btn">
       Добавить ресурс
     </router-link>
+    <router-link :to="{ name: 'instruction-add' }" class="add-resource-btn">
+      Добавить инструкцию
+    </router-link>
   </div>
+
   <div class="search-category">
     <SearchInput @search="handleSearch"/>
     <CategoryDropdown @update:category="handleCategoryChange"/>
   </div>
 
   <div class="resources-table">
-    <ResourcesTable 
+    <MainTable
     :items="filteredItems"
-    @resource-deleted="fetchItems"
+    @item-deleted="fetchItems"
     />
   </div>
 </template>
+
+
 
 
 <style>

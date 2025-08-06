@@ -22,9 +22,7 @@
             />
           
           
-          <router-link :to="{ name: 'auth'}">
-            <button class="login-button">Войти</button>
-          </router-link>
+          
           
           
         </div>
@@ -52,7 +50,6 @@ import { defineComponent } from 'vue';
 import axios from 'axios';
 import Sidebar from '@/components/Sidebar.vue';
 import SearchInput from '@/components/SearchInput.vue';
-import ResourcesTable from '@/components/ResourcesTable.vue';
 import ResourcesButton from '../components/ResourcesButton.vue';
 
 
@@ -72,7 +69,7 @@ export default defineComponent({
   components: {
     Sidebar,
     SearchInput,
-    ResourcesTable,
+
     ResourcesButton
   },
   data() {
@@ -186,23 +183,6 @@ export default defineComponent({
   width: 100%;
 }
 
-
-.login-button {
-  background-color: #D6E9FD;
-  color: #191F66;
-  border: none;
-  border-radius: 0.625rem;
-  cursor: pointer;
-  width: 9.65rem;
-  height: 3.6875rem;
-  font-size: 1.5625rem;
-  line-height: 1;
-
-  margin-right: 1.6rem;
-  margin-left: 2.1875rem;
-
-  flex-wrap: nowrap;
-}
 
 .logo {
   height: 3.6875rem;

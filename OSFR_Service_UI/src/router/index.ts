@@ -2,7 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MainViewAdmin from '@/views/MainViewAdmin.vue';
 import AuthorizationView from '@/views/AuthorizationView.vue';
 import MainUserView from '@/views/MainUserView.vue';
-import ResourcesEditView from '../views/ResourcesEditView.vue';
+import ResourcesEditView from '@/views/ResourcesEditView.vue';
+import InstructionForm from '@/views/InstructionFormView.vue';
+import InstructionView from '@/views/InstructionView.vue';
 
 const routes = [
   {
@@ -34,7 +36,7 @@ const routes = [
     path: '/admin/resources/add',
     name: 'resource-add',
     component: ResourcesEditView,
-    meta: { 
+    meta: {
       requiresAuth: true,
       windowTitle: 'Добавить ресурс'
     }
@@ -43,11 +45,41 @@ const routes = [
     path: '/admin/resources/edit/:id',
     name: 'resource-edit',
     component: ResourcesEditView,
-    meta: { 
+    meta: {
       requiresAuth: true,
       windowTitle: 'Редактировать ресурс'
     },
-    props: true, 
+    props: true,
+  },
+
+  {
+    path: '/admin/instructions/add',
+    name: 'instruction-add',
+    component: InstructionForm,
+    meta: {
+      requiresAuth: true,
+      windowTitle: 'Добавить инструкцию'
+    }
+  },
+  {
+    path: '/admin/instructions/edit/:id',
+    name: 'instruction-edit',
+    component: InstructionForm,
+    meta: {
+      requiresAuth: true,
+      windowTitle: 'Редактировать инструкцию'
+    },
+    props: true,
+  },
+  {
+    path: '/admin/instructions/view/:id',
+    name: 'instruction-view',
+    component: InstructionView,
+    meta: {
+      requiresAuth: true,
+      windowTitle: 'Просмотр инструкции'
+    },
+    props: true,
   },
 ];
 

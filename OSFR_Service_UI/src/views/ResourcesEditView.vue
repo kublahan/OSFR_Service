@@ -48,10 +48,12 @@ import { defineComponent, ref, onMounted, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '@/api/auth';
 
+
 interface Category {
   id: number | string;
   name: string;
 }
+
 
 interface FormData {
   name: string;
@@ -59,9 +61,6 @@ interface FormData {
   url: string;
   category_id: number | string | null;
 }
-
-
-const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
 
 export default defineComponent({
   name: 'ResourcesEditView',
@@ -73,14 +72,18 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter();
-    const isEditMode = computed(() => !!props.id);
+
+
+    const isEditMode = computed(() => !!props.id); 
     
+
     const formData = ref<FormData>({
       name: '',
       service: '',
       url: '',
       category_id: null,
     });
+
 
     const categories = ref<Category[]>([]);
 
@@ -122,6 +125,7 @@ export default defineComponent({
           await api.post(`/admin/resources`, formData.value);
           console.log('Ресурс успешно добавлен');
         }
+
         router.push({ name: 'admin' });
       } catch (error) {
         console.error('Ошибка при сохранении ресурса:', error);
@@ -136,6 +140,7 @@ export default defineComponent({
 
     onMounted(async () => {
       await fetchCategories();
+
       if (isEditMode.value) {
         await fetchResourceData(props.id);
       }
@@ -155,6 +160,7 @@ export default defineComponent({
         };
       }
     });
+
 
     return {
       isEditMode,

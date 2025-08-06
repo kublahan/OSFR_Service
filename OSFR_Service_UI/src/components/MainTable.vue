@@ -1,48 +1,59 @@
 <script lang="ts">
 import api from '@/api/auth';
 import { defineComponent, ref, PropType } from 'vue';
-
+import { useRouter } from 'vue-router';
 
 interface TableItem {
   id: number | string;
   category_id: number | string;
   category_name?: string;
   name: string;
-  service: string;
-  url: string;
+  service: string | null;
+  url: string | null;
+  type: 'resource' | 'instruction';
 }
 
-
 export default defineComponent({
-  name: 'ResourcesTable',
+  name: 'MainTable',
   props: {
     items: {
       type: Array as PropType<TableItem[]>,
       required: true,
     },
   },
-  emits: ['resource-deleted'],
+  emits: ['item-deleted'],
   
   setup(props, { emit }) {
+    const router = useRouter();
     const showConfirmModal = ref(false);
     const showErrorModal = ref(false);
-    const itemToDelete = ref<number | string | null>(null);
+    const itemToDelete = ref<{ id: number | string; type: 'resource' | 'instruction' } | null>(null);
     const errorMessage = ref('');
 
-    const showConfirmation = (id: number | string) => {
-      itemToDelete.value = id;
+    const showConfirmation = (id: number | string, type: 'resource' | 'instruction') => {
+      console.log('Кнопка удаления нажата для ID:', id, 'и Type:', type);
+      itemToDelete.value = { id, type };
       showConfirmModal.value = true;
     };
 
     const confirmDelete = async () => {
       if (itemToDelete.value) {
         try {
-          await api.delete(`/admin/resources/${itemToDelete.value}`);
-          console.log(`Ресурс с ID ${itemToDelete.value} успешно удален.`);
-          emit('resource-deleted');
+          const { id, type } = itemToDelete.value;
+          let deleteEndpoint = '';
+
+          if (type === 'resource') {
+            deleteEndpoint = `/admin/resources/${id}`;
+          } else if (type === 'instruction') {
+            deleteEndpoint = `/admin/instructions/${id}`;
+          }
+
+          await api.delete(deleteEndpoint);
+          console.log(`Элемент с ID ${id} (${type}) успешно удален.`);
+          emit('item-deleted');
         } catch (error) {
-          console.error(`Ошибка при удалении ресурса с ID ${itemToDelete.value}:`, error);
-          errorMessage.value = `Ошибка при удалении ресурса. Возможно, у вас нет прав на это действие или токен устарел.`;
+          console.error(`Ошибка при удалении элемента:`, error);
+          errorMessage.value = `Ошибка при удалении элемента. Возможно, у вас нет прав на это действие или токен устарел.`;
           showErrorModal.value = true;
         } finally {
           showConfirmModal.value = false;
@@ -60,6 +71,22 @@ export default defineComponent({
       showErrorModal.value = false;
       errorMessage.value = '';
     };
+
+    const navigateToEdit = (item: TableItem) => {
+        if (item.type === 'resource') {
+            router.push({ name: 'resource-edit', params: { id: item.id } });
+        } else if (item.type === 'instruction') {
+            router.push({ name: 'instruction-edit', params: { id: item.id } });
+        }
+    };
+
+    const openItem = (item: TableItem) => {
+        if (item.type === 'resource' && item.url) {
+            window.open(item.url, '_blank');
+        } else if (item.type === 'instruction') {
+            router.push({ name: 'instruction-view', params: { id: item.id } });
+        }
+    };
     
     return {
       showConfirmModal,
@@ -68,7 +95,9 @@ export default defineComponent({
       showConfirmation,
       confirmDelete,
       cancelDelete,
-      closeErrorModal
+      closeErrorModal,
+      navigateToEdit,
+      openItem
     };
   }
 });
@@ -87,25 +116,27 @@ export default defineComponent({
       </thead>
       <tbody>
         <tr v-for="item in items" :key="item.id">
-          <td class="category">{{ item.category_name }}</td> 
+          <td class="category">{{ item.category_name }}</td>
           <td class="name">{{ item.name }}</td>
-          <td>{{ item.service }}</td>
+          <td>{{ item.service || '—' }}</td>
           <td>
             <div class="actions-container">
-              <a :href="item.url" target="_blank" class="action-btn">
-              Открыть
-            </a>
-            <router-link :to="{ name: 'resource-edit', params: { id: item.id } }" class="edit-link">
-                <button class="edit-btn">
-                  <img src="@/assets/icons/Edit_Pencil.svg" alt="Pencil edit img">
-                </button>
-              </router-link>
+              <a
+                href="#"
+                @click.prevent="openItem(item)"
+                class="action-btn"
+              >
+                Открыть
+              </a>
 
-              <button @click="showConfirmation(item.id)" class="delete-btn">
+              <button @click="navigateToEdit(item)" class="edit-btn">
+                <img src="@/assets/icons/Edit_Pencil.svg" alt="Pencil edit img">
+              </button>
+
+              <button @click="showConfirmation(item.id, item.type)" class="delete-btn">
                 <img src="@/assets/icons/Trash_Full.svg" alt="Delete img">
               </button>
             </div>
-            
           </td>
         </tr>
         <tr v-if="items.length === 0">
@@ -120,7 +151,7 @@ export default defineComponent({
 
   <div v-if="showConfirmModal" class="modal-overlay">
     <div class="modal-content">
-      <p>Вы уверены, что хотите удалить этот ресурс?</p>
+      <p>Вы уверены, что хотите удалить этот элемент?</p>
       <div class="modal-actions">
         <button @click="confirmDelete" class="save-btn">Да</button>
         <button @click="cancelDelete" class="back-btn">Нет</button>
@@ -140,8 +171,6 @@ export default defineComponent({
 </template>
 
 <style scoped>
-
-
 .table-container {
   margin: 20px auto;
   border-radius: 8px;
@@ -150,12 +179,10 @@ export default defineComponent({
   overflow-x: auto;
 }
 
-
 .table {
   width: 100%;
   border-collapse: collapse;
 }
-
 
 .table th {
   background-color: #D6E9FD;
@@ -165,7 +192,6 @@ export default defineComponent({
   text-align: center;
   padding: 12px 16px;
 }
-
 
 .table td {
   padding: 12px 16px;
@@ -179,7 +205,6 @@ export default defineComponent({
 td.category {
   color: #1A185C;
 }
-
 
 .table tbody tr:nth-child(even) {
   background-color: #EDF6FF;
@@ -223,7 +248,7 @@ td.category {
 }
 
 .delete-btn {
-    background: red; 
+    background: red;
 }
 
 .edit-btn:hover {
@@ -233,6 +258,7 @@ td.category {
 .delete-btn:hover {
     background-color: #ffc4c4;
 }
+
 
 .modal-overlay {
   position: fixed;
@@ -254,6 +280,7 @@ td.category {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   text-align: center;
   max-width: 400px;
+  z-index: 1001;
 }
 
 .modal-content p {
