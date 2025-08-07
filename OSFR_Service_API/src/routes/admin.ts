@@ -6,11 +6,15 @@ import resourceController from '../controllers/resourceController';
 import instructionController from '../controllers/instructionController';
 import { getCategories } from '../controllers/categoryController';
 import { getAllItems } from '../controllers/MainDataController';
+import { uploadImage } from '../controllers/uploadController';
 
 const router = Router();
 
+
+
 router.use(adminAuthMiddleware);
 
+router.post('/upload-image', uploadImage);
 
 router.get('/dashboard', asyncHandler(async (req, res) => {
     res.json({ message: 'Admin dashboard' });
@@ -34,5 +38,7 @@ router.get('/categories', getCategories);
 
 
 router.get('/all-items', getAllItems);
+
+
 
 export default router;

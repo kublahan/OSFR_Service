@@ -43,17 +43,17 @@ export const getAllItems = asyncHandler(async (req: Request, res: Response) => {
     allItems = allItems.concat(instructions);
 
 
-    /*
-    let softwareQuery = 'SELECT id, name, version as service, url, category_id FROM software';
-    let softwareParams: any[] = [];
-    if (categoryId !== null) {
-        softwareQuery += ' WHERE category_id = $1';
-        softwareParams.push(categoryId);
-    }
-    const softwareResult = await pool.query(softwareQuery, softwareParams);
-    const software = softwareResult.rows.map(item => ({ ...item, type: 'software' }));
-    allItems = allItems.concat(software);
-    */
+    
+    // let softwareQuery = 'SELECT id, category_id, name, description, file_path, FROM software';
+    // let softwareParams: any[] = [];
+    // if (categoryId !== null) {
+    //     softwareQuery += ' WHERE category_id = $1';
+    //     softwareParams.push(categoryId);
+    // }
+    // const softwareResult = await pool.query(softwareQuery, softwareParams);
+    // const software = softwareResult.rows.map(item => ({ ...item, type: 'software' }));
+    // allItems = allItems.concat(software);
+    
 
     res.json(allItems);
 });

@@ -1,4 +1,3 @@
-// src/controllers/categoryController.ts
 import { Request, Response } from 'express';
 import pool from '../models';
 import asyncHandler from 'express-async-handler';

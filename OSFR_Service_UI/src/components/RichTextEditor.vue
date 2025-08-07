@@ -31,29 +31,54 @@ export default defineComponent({
       emit('update:modelValue', newValue);
     });
 
-    const imageHandler = () => {
-      const input = document.createElement('input');
-      input.setAttribute('type', 'file');
-      input.setAttribute('accept', 'image/*');
-      input.click();
+  const imageHandler = () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  
+  input.onchange = async () => {
+    const file = input.files?.[0];
+    if (!file) return;
 
-      input.onchange = async () => {
-        const file = input.files ? input.files[0] : null;
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const imageUrl = e.target?.result as string;
-            const quill = (quillEditor.value as any)?.getQuill();
-            if (quill) {
-              const range = quill.getSelection(true);
-              quill.insertEmbed(range.index, 'image', imageUrl);
-              quill.setSelection(range.index + 1);
-            }
-          };
-          reader.readAsDataURL(file);
-        }
-      };
-    };
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        throw new Error('Пользователь не авторизован');
+      }
+
+      const response = await fetch('http://localhost:3000/api/admin/upload-image', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Ошибка загрузки');
+      }
+
+      const { url } = await response.json();
+      
+      const quill = quillEditor.value?.getQuill();
+      if (quill) {
+        const range = quill.getSelection(true);
+        quill.insertEmbed(range.index, 'image', url);
+        quill.setSelection(range.index + 1);
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+    }
+  };
+
+  input.click();
+};
 
     const editorOptions = {
       theme: 'snow',
