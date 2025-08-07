@@ -6,7 +6,7 @@ import resourceController from '../controllers/resourceController';
 import instructionController from '../controllers/instructionController';
 import { getCategories } from '../controllers/categoryController';
 import { getAllItems } from '../controllers/MainDataController';
-import { uploadImage } from '../controllers/uploadController';
+import { deleteImage, uploadImage } from '../controllers/uploadController';
 
 const router = Router();
 
@@ -15,6 +15,7 @@ const router = Router();
 router.use(adminAuthMiddleware);
 
 router.post('/upload-image', uploadImage);
+router.post('/delete-image', deleteImage);
 
 router.get('/dashboard', asyncHandler(async (req, res) => {
     res.json({ message: 'Admin dashboard' });

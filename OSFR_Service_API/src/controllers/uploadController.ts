@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
-
+import fs from 'fs';
 
 const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, '../../uploads');
-
 
 
 
@@ -19,7 +18,6 @@ const storage = multer.diskStorage({
   }
 });
 
-
 const upload = multer({
   storage: storage,
   limits: {
@@ -33,6 +31,7 @@ const upload = multer({
     }
   }
 });
+
 
 export const uploadImage = (req: Request, res: Response) => {
   upload.single('image')(req, res, (err) => {
@@ -49,8 +48,7 @@ export const uploadImage = (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Файл не был загружен' });
     }
 
-        const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
-
+    const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
     const fileUrl = `${serverUrl}/uploads/${path.basename(req.file.path)}`;
     
     res.json({ 
@@ -58,5 +56,30 @@ export const uploadImage = (req: Request, res: Response) => {
       filename: req.file.filename,
       originalname: req.file.originalname
     });
+  });
+};
+
+
+export const deleteImage = (req: Request, res: Response) => {
+  const { url } = req.body;
+  if (!url) {
+    return res.status(400).json({ error: 'URL изображения не предоставлен' });
+  }
+
+  const filename = path.basename(url);
+  const filePath = path.join(uploadDir, filename);
+
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'Файл не найден' });
+  }
+
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error(`Ошибка при удалении файла ${filePath}:`, err);
+      return res.status(500).json({ error: 'Ошибка при удалении файла' });
+    }
+    res.status(200).json({ message: 'Файл успешно удалён' });
   });
 };

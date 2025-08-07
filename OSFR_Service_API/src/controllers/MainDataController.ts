@@ -7,14 +7,14 @@ export const getAllItems = asyncHandler(async (req: Request, res: Response) => {
     let categoryId: number | null = null;
 
     if (category) {
-        // Получаем ID категории по имени
+
         const categoryResult = await pool.query('SELECT id FROM categories WHERE name = $1', [category]);
         if (categoryResult.rows.length > 0) {
             categoryId = categoryResult.rows[0].id;
         } else {
 
             res.status(404).json({ error: 'Категория не найдена' });
-            return; // Явно завершаем выполнение функции после отправки ответа
+            return;
         }
     }
 
