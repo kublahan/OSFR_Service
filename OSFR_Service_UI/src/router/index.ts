@@ -5,6 +5,7 @@ import MainUserView from '@/views/MainUserView.vue';
 import ResourcesEditView from '@/views/ResourcesEditView.vue';
 import InstructionForm from '@/views/InstructionFormView.vue';
 import InstructionView from '@/views/InstructionView.vue';
+import SoftwareView from '@/views/SoftwareView.vue';
 
 const routes = [
   {
@@ -81,6 +82,26 @@ const routes = [
     },
     props: true,
   },
+
+      {
+        path: '/admin/software/add',
+        name: 'software-add',
+        component: SoftwareView,
+        meta: {
+            requiresAuth: true,
+            windowTitle: 'Добавить ПО'
+        }
+    },
+    {
+        path: '/admin/software/edit/:id',
+        name: 'software-edit',
+        component: SoftwareView,
+        meta: {
+            requiresAuth: true,
+            windowTitle: 'Редактировать ПО'
+        },
+        props: true,
+    },
 ];
 
 

@@ -1,9 +1,9 @@
 {
   "name": "osfr_service_api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "dev": "nodemon -r tsconfig-paths/register src/server.ts",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"

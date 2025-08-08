@@ -7,12 +7,10 @@ export const getAllItems = asyncHandler(async (req: Request, res: Response) => {
     let categoryId: number | null = null;
 
     if (category) {
-
         const categoryResult = await pool.query('SELECT id FROM categories WHERE name = $1', [category]);
         if (categoryResult.rows.length > 0) {
             categoryId = categoryResult.rows[0].id;
         } else {
-
             res.status(404).json({ error: 'Категория не найдена' });
             return;
         }
@@ -43,17 +41,15 @@ export const getAllItems = asyncHandler(async (req: Request, res: Response) => {
     allItems = allItems.concat(instructions);
 
 
-    
-    // let softwareQuery = 'SELECT id, category_id, name, description, file_path, FROM software';
-    // let softwareParams: any[] = [];
-    // if (categoryId !== null) {
-    //     softwareQuery += ' WHERE category_id = $1';
-    //     softwareParams.push(categoryId);
-    // }
-    // const softwareResult = await pool.query(softwareQuery, softwareParams);
-    // const software = softwareResult.rows.map(item => ({ ...item, type: 'software' }));
-    // allItems = allItems.concat(software);
-    
+    let softwareQuery = 'SELECT id, category_id, name, description, file_path FROM software';
+    let softwareParams: any[] = [];
+    if (categoryId !== null) {
+        softwareQuery += ' WHERE category_id = $1';
+        softwareParams.push(categoryId);
+    }
+    const softwareResult = await pool.query(softwareQuery, softwareParams);
+    const software = softwareResult.rows.map(item => ({ ...item, type: 'software' }));
+    allItems = allItems.concat(software);
 
     res.json(allItems);
 });
