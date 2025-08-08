@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import api from '@/api/auth';
 import RichTextEditor from '@/components/RichTextEditor.vue';
 
@@ -17,28 +17,39 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter();
-    const route = useRoute();
     const title = ref('');
     const content = ref('');
     const isEditing = ref(false);
-
+    const richTextEditorRef = ref<InstanceType<typeof RichTextEditor> | null>(null);
+    const isLoading = ref(true);
 
     const INSTRUCTION_CATEGORY_ID = 5;
 
     const fetchInstruction = async () => {
       try {
+        isLoading.value = true;
         const response = await api.get(`/admin/instructions/${props.id}`);
         title.value = response.data.title;
         content.value = response.data.content;
       } catch (error) {
         console.error('Ошибка при загрузке инструкции:', error);
+        title.value = '';
+        content.value = '';
+      } finally {
+        isLoading.value = false;
       }
     };
 
     const submitForm = async () => {
+      let finalContent = content.value;
+      if (richTextEditorRef.value) {
+
+        finalContent = await richTextEditorRef.value.handleSave(content.value);
+      }
+
       const payload = {
         title: title.value,
-        content: content.value,
+        content: finalContent,
         category_id: Number(INSTRUCTION_CATEGORY_ID),
       };
 
@@ -58,6 +69,10 @@ export default defineComponent({
       isEditing.value = !!newId;
       if (newId) {
         fetchInstruction();
+      } else {
+        title.value = '';
+        content.value = '';
+        isLoading.value = false;
       }
     }, { immediate: true });
 
@@ -66,11 +81,12 @@ export default defineComponent({
       content,
       isEditing,
       submitForm,
+      richTextEditorRef,
+      isLoading,
     };
   },
 });
 </script>
-
 
 <template>
   <div class="instruction-form-container">
@@ -82,10 +98,11 @@ export default defineComponent({
       </div>
       <div class="form-group">
         <label for="instruction-content">Содержание</label>
-        <RichTextEditor v-model="content" />
+        <div v-if="isLoading">Загрузка...</div>
+        <RichTextEditor v-else ref="richTextEditorRef" v-model="content" />
       </div>
       <div class="form-actions">
-        <button type="submit" class="save-button">
+        <button type="submit" class="save-button" :disabled="isLoading">
           Сохранить
         </button>
         <button type="button" @click="$router.push({ name: 'admin' })" class="cancel-button">
