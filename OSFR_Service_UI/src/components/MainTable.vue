@@ -92,12 +92,36 @@ export default defineComponent({
             }
         };
 
-        const downloadItem = (item: TableItem) => {
-            if (item.type === 'software') {
-                const downloadUrl = `/api/software/download/${item.id}`;
-                window.open(downloadUrl, '_blank');
-            }
-        };
+const downloadItem = async (item: TableItem) => {
+  if (item.type === 'software') {
+    try {
+      const response = await api.get(`/software/download/${item.id}`, {
+        responseType: 'blob'
+      });
+      
+
+      const fileName = `${item.name}.exe`;
+      
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      
+
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+    } catch (error) {
+      console.error('Ошибка при скачивании:', error);
+      errorMessage.value = 'Не удалось скачать файл';
+      showErrorModal.value = true;
+    }
+  }
+};
 
         return {
             showConfirmModal,
@@ -141,11 +165,11 @@ export default defineComponent({
               >
                 Открыть
               </a>
-              <button
+              <button 
                 v-if="item.type === 'software'"
                 @click="downloadItem(item)"
                 class="action-btn"
-              >
+                >
                 Скачать
               </button>
 

@@ -78,7 +78,7 @@ export default defineComponent({
 
     const saveSoftware = async () => {
 
-      const categoryId = 2;
+      const categoryId = 6;
 
 
       if (!software.value.name || !software.value.file) {

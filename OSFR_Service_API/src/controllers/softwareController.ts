@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import pool from '../models';
 import asyncHandler from 'express-async-handler';
 import path from 'path';
@@ -20,7 +20,25 @@ const storage = multer.diskStorage({
   }
 });
 
-export const upload = multer({ storage: storage });
+export const upload = multer({ 
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+
+      const uniqueName = `${Date.now()}.exe`;
+      cb(null, uniqueName);
+    }
+  }),
+  fileFilter: (req, file, cb) => {
+
+    cb(null, true);
+  }
+});
 
 export const createSoftware = asyncHandler(async (req: Request, res: Response) => {
     console.log('Данные req.body:', req.body);
@@ -92,19 +110,50 @@ export const deleteSoftware = asyncHandler(async (req: Request, res: Response) =
     res.status(200).json({ message: 'ПО успешно удалено' });
 });
 
-export const downloadSoftware = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const result = await pool.query('SELECT file_path FROM software WHERE id = $1', [id]);
+export const downloadSoftware = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params;
+        
+        const result = await pool.query(
+            'SELECT file_path, name FROM software WHERE id = $1', 
+            [id]
+        );
 
-    if (result.rows.length > 0 && result.rows[0].file_path) {
+        if (result.rows.length === 0 || !result.rows[0].file_path) {
+            res.status(404).json({ error: 'ПО не найдено' });
+            return;
+        }
+
         const filePath = result.rows[0].file_path;
-        res.download(filePath, (err) => {
-            if (err) {
-                console.error('Ошибка при скачивании файла:', err);
-                res.status(500).json({ error: 'Не удалось скачать файл' });
-            }
+        const displayName = result.rows[0].name;
+        
+        if (!fs.existsSync(filePath)) {
+            res.status(404).json({ error: 'Файл не найден на сервере' });
+            return;
+        }
+
+        const downloadFileName = `${displayName}.exe`;
+        
+        return new Promise<void>((resolve, reject) => {
+            res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(downloadFileName)}"`);
+            res.setHeader('Content-Type', 'application/x-msdownload');
+            
+            const fileStream = fs.createReadStream(filePath);
+            fileStream.pipe(res);
+
+            fileStream.on('end', () => {
+                resolve();
+            });
+
+            fileStream.on('error', (err) => {
+                console.error('Ошибка при чтении файла:', err);
+                if (!res.headersSent) {
+                    res.status(500).json({ error: 'Ошибка при чтении файла' });
+                }
+                reject(err);
+            });
         });
-    } else {
-        res.status(404).json({ error: 'Файл не найден' });
+    } catch (err) {
+        next(err);
     }
 });

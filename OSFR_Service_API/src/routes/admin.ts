@@ -35,6 +35,7 @@ router.post('/software', softwareController.upload.single('file'), softwareContr
 router.get('/software/:id', softwareController.getSoftwarebyId);
 router.put('/software/:id', softwareController.updateSoftware);
 router.delete('/software/:id', softwareController.deleteSoftware);
+router.get('/software/download/:id', softwareController.downloadSoftware);
 
 router.get('/categories', getCategories);
 router.get('/all-items', getAllItems);
