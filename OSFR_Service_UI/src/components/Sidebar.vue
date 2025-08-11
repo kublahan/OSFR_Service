@@ -1,19 +1,20 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar" :class="{ 'is-collapsed': isCollapsed }">
     <div class="sidebar-head">
       Корпоративный ресурс ОСФР
       <br>по г. Москве и Московской области
+      <button v-if="isMobile" @click="toggleSidebar" class="close-btn">
+        &times;
+      </button>
     </div>
-
-
+    
     <div
-        class="sidebar-category"
-        :class="{ 'active': selectedCategoryId === null }"
-        @click="selectCategory(null)"
+      class="sidebar-category"
+      :class="{ 'active': selectedCategoryId === null }"
+      @click="selectCategory(null)"
     >
-        Все категории
+      Все категории
     </div>
-
 
     <div 
       v-for="category in categories"
@@ -34,23 +35,27 @@ export default defineComponent({
   name: 'Sidebar',
   props: {
     categories: {
-      type: Array as PropType<{id: number, name: string}[]>,
+      type: Array as PropType<{id: number | string, name: string}[]>,
       required: true,
       default: () => []
     }
   },
   data() {
     return {
-      selectedCategoryId: null as number | null
+      selectedCategoryId: null as number | string | null,
+      isMobile: false,
+      isCollapsed: false,
     };
   },
   methods: {
-    selectCategory(categoryId: number | null) {
+    selectCategory(categoryId: number | string | null) {
       this.selectedCategoryId = categoryId;
       this.$emit('select-category', categoryId);
-    }
+      if (this.isMobile) {
+        this.isCollapsed = true;
+      }
+    },
   },
-
   emits: ['select-category']
 });
 </script>
@@ -63,13 +68,14 @@ export default defineComponent({
     #0983FE 0%,
     #1057BC 37%,
     #1A185C 100%
-);
+  );
   color: white;
-  height: 100vh;
-  position: sticky;
+  min-height: 100vh;
+  position: fixed;
   top: 0;
   padding: 1rem;
   text-align: center;
+  transition: transform 0.3s ease-in-out;
 }
 
 .sidebar-head {
@@ -78,8 +84,8 @@ export default defineComponent({
   padding: 1rem;
   margin-bottom: 2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  
   letter-spacing: 0.03em;
+  position: relative;
 }
 
 .sidebar-category {
@@ -96,7 +102,7 @@ export default defineComponent({
     to right,
     #5CA4FC 0%,
     #3C8CEE 100%
-);
+  );
 }
 
 .sidebar-category.active {
@@ -104,6 +110,56 @@ export default defineComponent({
     to right,
     #5CA4FC 0%,
     #3C8CEE 100%
-);
+  );
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2.5rem;
+  cursor: pointer;
+  display: none;
+}
+
+
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 20rem;
+  }
+  .sidebar-head {
+    font-size: 28px;
+  }
+  .sidebar-category {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.is-collapsed {
+    transform: translateX(0);
+  }
+
+  .sidebar-head {
+    text-align: left;
+    font-size: 24px;
+  }
+
+  .close-btn {
+    display: block;
+  }
 }
 </style>
