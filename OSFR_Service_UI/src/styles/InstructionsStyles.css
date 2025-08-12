@@ -1,0 +1,34 @@
+.ql-editor h1, .instruction-content h1 {
+  text-align: center;
+  color: #1a185c;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-family: 'Lato-SemiBold';
+}
+
+.ql-editor h2, .instruction-content h2 {
+  font-size: 2em;
+  font-family: 'Lato-SemiBold';
+  color: #1a185c;
+  margin-bottom: 0.5em;
+}
+
+.ql-editor p, .instruction-content p {
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #333;
+}
+
+.ql-editor img, .instruction-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ql-editor a, .instruction-content a {
+  color: #1150B0;
+  text-decoration: underline;
+}

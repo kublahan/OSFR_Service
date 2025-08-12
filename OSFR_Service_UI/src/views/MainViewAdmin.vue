@@ -1,3 +1,64 @@
+<template>
+  <header class="app-header">
+    <div class="header-left">
+      <img src="@/assets/icons/Logo_OSFR.svg" alt="OSFR Logo" class="logo">
+    </div>
+
+    <router-link :to="{ name: 'auth'}">
+      <button class="admin-btn">Админ</button>
+    </router-link>
+  </header>
+
+  <div class="name-banner">
+    Корпоративный ресурс ОСФР <br>по г. Москве и Московской области
+  </div>
+
+  <div class="search-category">
+    <SearchInput 
+            @search="handleSearch"
+            :customWidth="'55.438rem'"
+          />
+    <CategoryDropdown @update:category="handleCategoryChange"/>
+    
+    <div class="add-dropdown-wrapper">
+      <div class="add-dropdown-header" @click="toggleDropdown">
+        <span>Добавить...</span>
+        <svg
+          :class="{ 'rotated': isDropdownOpen }"
+          class="dropdown-arrow-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
+      <div v-if="isDropdownOpen" class="add-dropdown-list">
+        <router-link :to="{ name: 'resource-add' }" class="add-dropdown-item">
+          Добавить ресурс
+        </router-link>
+        <router-link :to="{ name: 'instruction-add' }" class="add-dropdown-item">
+          Добавить инструкцию
+        </router-link>
+        <router-link :to="{ name: 'software-add' }" class="add-dropdown-item">
+          Добавить ПО
+        </router-link>
+      </div>
+    </div>
+  </div>
+
+  <div class="resources-table">
+    <MainTable
+      :items="filteredItems"
+      @item-deleted="fetchItems"
+    />
+  </div>
+</template>
+
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import api from '@/api/auth';
@@ -28,14 +89,14 @@ export default defineComponent({
             filteredItems: [] as TableItem[],
             categories: [] as {id: number, name: string}[],
             searchTerm: '',
-            selectedCategory: null as number | string | null
+            selectedCategory: null as number | string | null,
+            isDropdownOpen: false
         };
     },
     async created() {
         await this.fetchCategories();
         await this.fetchItems();
     },
-
     methods: {
         async fetchCategories() {
             try {
@@ -48,12 +109,10 @@ export default defineComponent({
         async fetchItems() {
             try {
                 const response = await api.get<TableItem[]>(`/admin/all-items`);
-
                 this.items = response.data.map(item => ({
                     ...item,
                     category_name: this.getCategoryName(item.category_id)
                 }));
-
                 this.applyFilters();
             } catch (error) {
                 console.error('Error fetching items:', error);
@@ -73,11 +132,9 @@ export default defineComponent({
         },
         applyFilters() {
             let result = [...this.items];
-
             if (this.selectedCategory !== null) {
                 result = result.filter(item => item.category_id == this.selectedCategory);
             }
-
             if (this.searchTerm) {
                 const term = this.searchTerm.toLowerCase();
                 result = result.filter(item =>
@@ -86,53 +143,14 @@ export default defineComponent({
                     (item.category_name && item.category_name.toLowerCase().includes(term))
                 );
             }
-
             this.filteredItems = result;
+        },
+        toggleDropdown() {
+            this.isDropdownOpen = !this.isDropdownOpen;
         }
     }
 });
 </script>
-
-<template>
-  <header class="app-header">
-    <div class="header-left">
-      <img src="@/assets/icons/Logo_OSFR.svg" alt="OSFR Logo" class="logo">
-    </div>
-
-    <router-link :to="{ name: 'auth'}">
-      <button class="admin-btn">Админ</button>
-    </router-link>
-  </header>
-
-  <div class="name-banner">
-    Корпоративный ресурс ОСФР <br>по г. Москве и Московской области
-  </div>
-
-  <div class="add-resource-container">
-    <router-link :to="{ name: 'resource-add' }" class="add-resource-btn">
-      Добавить ресурс
-    </router-link>
-    <router-link :to="{ name: 'instruction-add' }" class="add-resource-btn">
-      Добавить инструкцию
-    </router-link>
-
-    <router-link :to="{ name: 'software-add' }" class="add-resource-btn">
-      Добавить ПО
-    </router-link>
-  </div>
-
-  <div class="search-category">
-    <SearchInput @search="handleSearch"/>
-    <CategoryDropdown @update:category="handleCategoryChange"/>
-  </div>
-
-  <div class="resources-table">
-    <MainTable
-      :items="filteredItems"
-      @item-deleted="fetchItems"
-    />
-  </div>
-</template>
 
 <style>
 
@@ -157,21 +175,22 @@ export default defineComponent({
 }
 
 .name-banner {
-    width: 100%;
-    height: 13.125rem;
-    background: linear-gradient(to right, #0983FE 12%, #124AA7 41%, #1A185C 100%);
-    color: #FFFFFF;
-    font-size: 4.3125rem;
-    font-family: 'Lato-SemiBold';
-    letter-spacing: 0.03rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    padding: 1.375rem;
-    text-align: center;
-    line-height: 1.3;
+  width: 100%;
+  height: 13.125rem;
+  background: linear-gradient(to right, #0983FE 12%, #124AA7 41%, #1A185C 100%);
+  color: #FFFFFF;
+  font-size: 4.3125rem;
+  font-family: 'Lato-SemiBold';
+  letter-spacing: 0.03rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 1.375rem;
+  text-align: center;
+  line-height: 1.3;
 }
+
 
 .search-category {
     display: flex;
@@ -183,17 +202,86 @@ export default defineComponent({
 }
 
 .admin-btn {
-    background-color: #D6E9FD;
-    color: #191F66;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.3125rem;
-    cursor: pointer;
-    width: 7.6875rem;
-    height: 2.9375rem;
-    font-size: 1.5625rem;
-    margin-right: 34px;
+  background-color: #D6E9FD;
+  color: #191F66;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.3125rem;
+  cursor: pointer;
+  width: 7.6875rem;
+  height: 2.9375rem;
+  font-size: 1.5625rem;
+  margin-right: 34px;
+}
+
+
+.add-dropdown-wrapper {
+  position: relative;
+  width: 29.4631rem;
+  font-family: 'Inter-Regular';
+  z-index: 999;
+}
+
+.add-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 3.9375rem;
+  background-color: #D6E9FD;
+  border: none;
+  border-radius: 0.625rem;
+  font-size: 1.5625rem;
+  color: #191F66;
+  padding: 0 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #D6E9FD;
+  border-radius: 0 0 0.625rem 0.625rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border-top: 1px solid #c0d9fa;
+}
+
+.add-dropdown-item {
+  display: block;
+  padding: 0.75rem 1rem;
+  font-size: 1.25rem;
+  color: #191F66;
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(25, 31, 102, 0.1);
+  transition: background-color 0.2s;
+}
+
+.add-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.add-dropdown-item:hover {
+  background-color: #c0d9fa;
+}
+
+.dropdown-arrow-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-arrow-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.resources-table {
+  margin-top: 2.5rem;
 }
 </style>

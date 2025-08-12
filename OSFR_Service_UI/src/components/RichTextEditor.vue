@@ -1,3 +1,16 @@
+<template>
+  <div class="editor-container">
+    <QuillEditor
+      ref="quillEditor"
+      v-model:content="content" 
+      contentType="html"
+      :options="editorOptions"
+      @ready="onReady"
+      class="quill-editor-custom"
+    />
+  </div>
+</template>
+
 <script lang="ts">
 import { defineComponent, ref, watch, onUnmounted } from 'vue';
 import { QuillEditor, Quill } from '@vueup/vue-quill';
@@ -27,25 +40,14 @@ export default defineComponent({
     const pendingImages = ref(new Map<string, File>());
     const blobUrls = ref(new Set<string>());
     
-
     const apiUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
 
-
-    /**
-     * Извлекает все URL-адреса изображений из текущего содержимого Quill.
-     * @param quillInstance Экземпляр Quill.
-     * @returns Набор URL-адресов изображений.
-     */
     const getImagesFromQuill = (quillInstance: any): Set<string> => {
       if (!quillInstance) return new Set();
       const images = quillInstance.root.querySelectorAll('img');
       return new Set(Array.from(images).map(img => img.getAttribute('src') || ''));
     };
 
-    /**
-     * Отправляет запрос на сервер для удаления изображения.
-     * @param imageUrl URL-адрес изображения для удаления.
-     */
     const deleteImageFromServer = async (imageUrl: string) => {
       try {
         if (!token) throw new Error('Пользователь не авторизован');
@@ -69,10 +71,6 @@ export default defineComponent({
       }
     };
     
-    /**
-     * Загружает все ожидающие изображения на сервер.
-     * @returns Map, сопоставляющую временные URL с постоянными URL с сервера.
-     */
     const uploadImagesAndGetUrls = async () => {
       const tempToPermanentUrls = new Map<string, string>();
       const uploadPromises: Promise<void>[] = [];
@@ -100,29 +98,19 @@ export default defineComponent({
       return tempToPermanentUrls;
     };
     
-    /**
-     * Обрабатывает сохранение содержимого редактора.
-     * Загружает новые изображения, заменяет временные URL на постоянные и удаляет ненужные изображения.
-     * @param contentToSave HTML-содержимое редактора.
-     * @returns Итоговое содержимое с постоянными URL-адресами.
-     */
     const handleSave = async (contentToSave: string) => {
-      // Загружаем новые изображения и получаем их URL
       const tempToPermanentUrls = await uploadImagesAndGetUrls();
       
       let finalContent = contentToSave;
-      // Заменяем временные URL на постоянные в HTML-содержимом
       tempToPermanentUrls.forEach((permanentUrl, tempUrl) => {
         finalContent = finalContent.replace(new RegExp(tempUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), permanentUrl);
       });
 
-      // Получаем список текущих URL из ОБНОВЛЕННОЙ строки HTML
       const parser = new DOMParser();
       const doc = parser.parseFromString(finalContent, 'text/html');
       const images = doc.querySelectorAll('img');
       const currentImageUrls = new Set(Array.from(images).map(img => img.getAttribute('src') || ''));
       
-
       const imagesToDelete = new Set<string>();
 
       initialImageUrls.value.forEach(url => {
@@ -134,18 +122,14 @@ export default defineComponent({
       const deletePromises = Array.from(imagesToDelete).map(url => deleteImageFromServer(url));
       await Promise.all(deletePromises);
       
-      // Очистка временных ресурсов
       pendingImages.value.clear();
       blobUrls.value.forEach(url => URL.revokeObjectURL(url));
       blobUrls.value.clear();
       
-      // Обновляем список "начальных" URL-адресов для следующей сессии редактирования
       initialImageUrls.value = currentImageUrls;
-
 
       return finalContent;
     };
-
 
     const imageHandler = () => {
       const input = document.createElement('input');
@@ -163,11 +147,8 @@ export default defineComponent({
           const quill = quillEditor.value?.getQuill();
           if (quill) {
             const range = quill.getSelection(true);
-            // Вставляем Base64-строку в редактор для мгновенного отображения.
             quill.insertEmbed(range.index, 'image', base64Url);
             quill.setSelection(range.index + 1);
-
-            // Сохраняем файл с Base64-строкой в качестве ключа для последующей загрузки на сервер.
             pendingImages.value.set(base64Url, file);
           }
         };
@@ -176,12 +157,10 @@ export default defineComponent({
       input.click();
     };
 
-    // Очистка временных URL при уничтожении компонента (хотя для Base64 это не так критично, как для blob:).
     onUnmounted(() => {
       blobUrls.value.forEach(url => URL.revokeObjectURL(url));
     });
 
-    // Настройки редактора Quill
     const editorOptions = {
       theme: 'snow',
       modules: {
@@ -194,7 +173,7 @@ export default defineComponent({
             [{ 'script': 'sub'}, { 'script': 'super' }],
             [{ 'indent': '-1'}, { 'indent': '+1' }],
             [{ 'direction': 'rtl' }],
-            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'size': ['small', false, 'large', 'huge'] }], 
             [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
             [{ 'color': [] }, { 'background': [] }],
             [{ 'font': [] }],
@@ -203,7 +182,7 @@ export default defineComponent({
             ['clean']
           ],
           handlers: {
-            'image': imageHandler // Привязываем наш обработчик к кнопке "Изображение"
+            'image': imageHandler
           }
         },
         imageResize: {
@@ -214,19 +193,16 @@ export default defineComponent({
       placeholder: 'Начните писать здесь...',
     };
     
-    // Отслеживаем изменения props.modelValue для обновления содержимого редактора
     watch(() => props.modelValue, (newValue) => {
       if (newValue !== content.value) {
         content.value = newValue;
       }
     }, { immediate: true });
 
-    // Устанавливаем начальные URL-адреса изображений после загрузки Quill
     const onReady = (quillInstance: any) => {
       initialImageUrls.value = getImagesFromQuill(quillInstance);
     };
 
-    // Отслеживаем изменения содержимого Quill и отправляем их в родительский компонент
     watch(content, (newValue) => {
       emit('update:modelValue', newValue);
     });
@@ -242,73 +218,90 @@ export default defineComponent({
 });
 </script>
 
-<template>
-  <div class="editor-container">
-    <QuillEditor
-      ref="quillEditor"
-      v-model:content="content" 
-      contentType="html"
-      :options="editorOptions"
-      @ready="onReady"
-      class="quill-editor-custom"
-    />
-  </div>
-</template>
-
 <style>
+
+@import '@/styles/InstructionsStyles.css';
+
+
 .editor-container {
   max-width: 1200px;
   margin: 20px auto;
   background-color: #f0f0f0;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
   padding: 20px;
   box-sizing: border-box;
 }
 
-.quill-editor-custom {
+
+.quill-editor-custom .ql-editor {
   width: 210mm;
   min-height: 297mm;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
   padding: 20mm;
   box-sizing: border-box;
-  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
 }
 
-.ql-toolbar {
+
+.ql-toolbar.ql-snow {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
   background-color: #D6E9FD;
-  border: 1px solid #D6E9FD;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  padding: 10px;
+  border: 1px solid #c9dff7;
+  border-radius: 8px 8px 0 0;
+  padding: 12px 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.ql-container {
+
+.ql-toolbar button,
+.ql-toolbar .ql-picker {
+  border: none !important;
+  background-color: transparent !important;
+  transition: all 0.2s ease;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.ql-toolbar button:hover,
+.ql-toolbar .ql-picker:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-2px);
+}
+
+.ql-toolbar button.ql-active,
+.ql-toolbar .ql-picker.ql-active {
+  background-color: #1a185c !important;
+  color: #fff !important;
+  transform: none;
+}
+
+.ql-toolbar svg {
+  width: 20px;
+  height: 20px;
+}
+
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="small"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="small"]::before { content: '12px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item::before { content: '16px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="large"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="large"]::before { content: '20px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="huge"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="huge"]::before { content: '24px'; }
+
+
+.ql-container.ql-snow {
   border: none;
   font-family: 'Inter-Regular', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
 }
-
-.ql-editor img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 10px auto;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.ql-editor a {
-  color: #1150B0;
-  text-decoration: underline;
-}
-
-.ql-editor h1 { font-size: 2em; margin-bottom: 0.5em; }
-.ql-editor h2 { font-size: 1.5em; margin-bottom: 0.5em; }
 </style>

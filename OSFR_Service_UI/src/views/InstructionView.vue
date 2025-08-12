@@ -52,6 +52,8 @@ export default defineComponent({
 </template>
 
 <style scoped>
+@import '@/styles/InstructionsStyles.css';
+
 .instruction-view-container {
     max-width: 800px;
     margin: 40px auto;
@@ -67,21 +69,6 @@ export default defineComponent({
     margin-bottom: 20px;
     font-size: 2.5rem;
     font-family: 'Lato-SemiBold';
-}
-
-.instruction-content {
-    line-height: 1.6;
-    font-size: 1rem;
-    color: #333;
-}
-
-.instruction-content img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 20px auto;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .error-message, .loading-message {

@@ -16,7 +16,10 @@
         <input type="password" placeholder="Пароль" class="password-input" v-model="password" />
       </div>
       <button class="enter-btn" @click="handleLogin">Войти</button>
-      <button class="back-btn" @click="goBack">Назад</button>
+      <div class="back-btn-container">
+        <button class="back-btn" @click="goBack">Назад</button>
+      </div>
+      
       <p v-if="error" class="error-message">{{ error }}</p>
     </div>
   </div>
@@ -178,37 +181,39 @@ export default {
 
 
 .enter-btn {
-  background-color: #007bff;
+  background-color: #114EAE;
   color: #ffffff;
-  padding: 12px 20px;
   border: none;
-  border-radius: 8px;
-  font-size: 18px;
+  border-radius: 10px;
+  font-size: 28px;
+  font-family: 'Inter-Regular';
   cursor: pointer;
-  width: 100%;
-  box-sizing: border-box;
-  transition: background-color 0.3s ease;
+  width: 28.375rem;
+  height: 4.125rem;
+
 }
 
-.enter-btn:hover {
-  background-color: #0056b3;
+.auth-form .back-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 83px;
 }
 
 .back-btn {
   background-color: transparent;
-  color: #007bff;
-  padding: 10px 15px;
-  border: 1px solid #007bff;
+  color: #124AA7;
+  border: 1px solid #0D6BDA;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 22px;
+  font-family: 'Inter-Light';
   cursor: pointer;
-  width: auto;
+  width: 8.375rem;
+  height: 2.188rem;
   box-sizing: border-box;
-  transition: all 0.3s ease;
   margin-top: 10px;
+  align-items: center;
 }
 
-.back-btn:hover {
-  background-color: #e0f2f7;
-}
+
 </style>
