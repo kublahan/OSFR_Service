@@ -41,7 +41,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
-import api from '@/api/auth'; // Импортируем api
+import api from '@/api/auth';
 import { useRouter } from 'vue-router';
 import Sidebar from '@/components/Sidebar.vue';
 import SearchInput from '@/components/SearchInput.vue';
@@ -253,8 +253,8 @@ export default defineComponent({
 
 .resources-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    gap: 1.688rem 2.188rem;
     width: 100%;
     padding: 0 2.5625rem;
 }
@@ -312,6 +312,7 @@ export default defineComponent({
     }
     .resources-grid {
         grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+        
     }
     .selected-category h2 {
         font-size: 2rem;

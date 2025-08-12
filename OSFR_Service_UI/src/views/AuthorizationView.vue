@@ -5,12 +5,14 @@
     </div>
 
     <div class="auth-form">
-      <img src="/Logo_OSFR.svg" alt="logo" class="logo-auth" />
+      <img src="@/assets/icons/Logo_OSFR.svg" alt="logo" class="logo-auth" />
       <div class="auth-title">Авторизация</div>
       <div class="input-group">
+
         <input type="text" placeholder="Логин" class="login-input" v-model="username" />
       </div>
       <div class="input-group">
+
         <input type="password" placeholder="Пароль" class="password-input" v-model="password" />
       </div>
       <button class="enter-btn" @click="handleLogin">Войти</button>
@@ -93,7 +95,6 @@ export default {
   padding: 1.375rem;
   text-align: center;
 
-  position: absolute;
   top: 0;
   left: 0;
   margin-top: 0;
@@ -103,64 +104,78 @@ export default {
 
 .auth-form {
   background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 40px;
+  border-radius: 40px;
+  box-shadow: 0px 5px 10px rgba(26, 25, 92, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  width: 400px;
-  margin-top: 89px;
+  width: 38.563rem;
+  height: 36.125rem;
+  margin-top: 4.625rem;
 }
 
 .logo-auth {
-  width: 80px;
-  height: auto;
-  margin-bottom: 10px;
+  width: 4.25rem;
+  height: 3.5rem;
+  margin-bottom: 8px;
+  margin-top: 45px;
 }
 
 .auth-title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333333;
-  margin-bottom: 20px;
+  font-size: 48px;
+  font-family: 'Inter-Medium';
+  color: #1A1A5F;
 }
 
-.input-group {
+
+
+.login-input {
+  margin: 28px 83px 0px 80px;
+  background-image: url('@/assets/icons/User_alt.svg');
+  background-repeat: no-repeat;
+  background-position: 21px center;
+  background-size: 1.5rem;
+  padding-left: 1.313rem;
   position: relative;
-  width: 100%;
+
+  display: flex;
+  justify-content: center;
 }
+
+.password-input {
+  margin: 28px 83px 40px 80px;
+  background-image: url('@/assets/icons/Unlock.svg');
+  background-repeat: no-repeat;
+  background-position: 21px center;
+  background-size: 1.5rem;
+  padding-left: 1.313rem;
+  display: flex;
+  justify-content: center;
+} 
+
 
 .input-group input {
-  width: calc(100% - 40px);
-  padding: 12px 15px 12px 40px;
-  border: 1px solid #cccccc;
-  border-radius: 8px;
-  font-size: 16px;
-  color: #333333;
+  font-family: 'Inter-Light';
+  border: 1px solid #0D6BDA;
+  border-radius: 40px;
+  font-size: 28px;
+  color: #000000;
+  outline: none;
+  background-color: #F9F9F9;
+  padding-left: 50px;
+  width: 28.375rem;
+  height: 4.125rem;
 }
 
-.input-group .input-icon {
+.input-icon {
   position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
+  margin: 216px 492px 338px 101px;
+  width: 24px;
+  height: 24px;
   color: #888888;
+  z-index: 10;
 }
 
-.input-group .password-toggle-icon {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  color: #888888;
-}
 
 .enter-btn {
   background-color: #007bff;

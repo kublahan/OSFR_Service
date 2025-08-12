@@ -111,6 +111,7 @@ export default defineComponent({
     #5CA4FC 0%,
     #3C8CEE 100%
   );
+
 }
 
 .close-btn {

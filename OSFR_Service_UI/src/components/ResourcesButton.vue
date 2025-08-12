@@ -64,6 +64,7 @@ export default defineComponent({
 .main-container:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background: #D6E9FD;
 }
 
 .content-wrapper {
@@ -91,19 +92,16 @@ export default defineComponent({
 .action-btn {
     display: inline-block;
     padding: 0.5rem 1rem;
-    background-color: #D6E9FD;
-    color: #191F66;
+    background: linear-gradient(to right, #105CC3 0%, #105CC3 100%);
+    color: #FFFFFF;
     border-radius: 0.5rem;
     text-align: center;
     width: fit-content;
     align-self: flex-end;
 }
 
-.main-container:hover .action-btn {
-    background-color: #c0d9fa;
-}
 
-/* Адаптивный дизайн */
+
 @media (max-width: 1200px) {
     .main-container {
         width: 18rem;

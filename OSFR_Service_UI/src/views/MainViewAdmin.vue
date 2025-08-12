@@ -96,7 +96,7 @@ export default defineComponent({
 <template>
   <header class="app-header">
     <div class="header-left">
-      <img src="/Logo_OSFR.svg" alt="OSFR Logo" class="logo">
+      <img src="@/assets/icons/Logo_OSFR.svg" alt="OSFR Logo" class="logo">
     </div>
 
     <router-link :to="{ name: 'auth'}">
@@ -115,7 +115,7 @@ export default defineComponent({
     <router-link :to="{ name: 'instruction-add' }" class="add-resource-btn">
       Добавить инструкцию
     </router-link>
-    <!-- Новая кнопка для добавления ПО -->
+
     <router-link :to="{ name: 'software-add' }" class="add-resource-btn">
       Добавить ПО
     </router-link>
@@ -135,7 +135,7 @@ export default defineComponent({
 </template>
 
 <style>
-/* Стили остались без изменений */
+
 .app-header {
   display: flex;
   justify-content: space-between;
