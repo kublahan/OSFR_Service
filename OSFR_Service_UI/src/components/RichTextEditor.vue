@@ -190,7 +190,7 @@ export default defineComponent({
           modules: ['Resize', 'DisplaySize', 'Toolbar']
         }
       },
-      placeholder: 'Начните писать здесь...',
+
     };
     
     watch(() => props.modelValue, (newValue) => {
@@ -272,7 +272,6 @@ export default defineComponent({
 .ql-toolbar button:hover,
 .ql-toolbar .ql-picker:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
-  transform: translateY(-2px);
 }
 
 .ql-toolbar button.ql-active,
