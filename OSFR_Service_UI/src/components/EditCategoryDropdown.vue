@@ -17,13 +17,9 @@
     </div>
 
     <div v-if="isOpen" class="category-dropdown-list">
-      <div 
-        class="category-dropdown-item" 
-        @click="selectCategory(null, 'Выберите категорию')">
-        Выберите категорию
-      </div>
+      
       <div
-        v-for="category in categories"
+        v-for="category in filteredCategories"
         :key="category.id"
         class="category-dropdown-item"
         @click="selectCategory(category.id, category.name)"
@@ -35,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 
 interface Category {
   id: number | string;
@@ -57,6 +53,16 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const isOpen = ref(false);
+    
+
+    const excludedCategoryIds = [5, 6];
+
+
+    const filteredCategories = computed(() => {
+      return props.categories.filter(category => 
+        !excludedCategoryIds.includes(category.id as number)
+      );
+    });
 
     const displaySelectedCategory = computed(() => {
       if (props.modelValue === null) {
@@ -80,6 +86,7 @@ export default defineComponent({
       displaySelectedCategory,
       toggleDropdown,
       selectCategory,
+      filteredCategories
     };
   },
 });
@@ -88,7 +95,8 @@ export default defineComponent({
 <style scoped>
 .category-dropdown-wrapper {
   position: relative;
-  width: 100%;
+  width: 37.938rem;
+  height: 3.875rem;
   font-family: 'Inter-Medium';
   z-index: 1000;
 }
@@ -97,12 +105,12 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 37.938rem;
   height: 3.875rem;
   background: linear-gradient(to right, #0D6EDE 0%, #073B78 100%);
   border: none;
   border-radius: 20px;
-  font-size: 1.5rem;
+  font-size: 1.563rem;
   color: white;
   padding: 0 1rem;
   cursor: pointer;
@@ -116,20 +124,19 @@ export default defineComponent({
 
 .category-dropdown-list {
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
+  width: 37.938rem;
   background-color: #D6E9FD;
   border-radius: 0 0 20px 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   border-top: 1px solid #c0d9fa;
+  color: white;
 }
 
 .category-dropdown-item {
   padding: 0.75rem 1rem;
-  font-size: 1.25rem;
-  color: #191F66;
+  font-size: 1.563rem;
+  background-image: linear-gradient(to right, #0D6EDE 0%, #073B78 100%);
   cursor: pointer;
   border-bottom: 1px solid rgba(25, 31, 102, 0.1);
 }
@@ -139,7 +146,8 @@ export default defineComponent({
 }
 
 .category-dropdown-item:hover {
-  background-color: #c0d9fa;
+  background-image: none;
+  background-color: #9FCDFF;
 }
 
 .dropdown-arrow-icon {

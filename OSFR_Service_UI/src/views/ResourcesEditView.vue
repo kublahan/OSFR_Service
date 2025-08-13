@@ -34,7 +34,7 @@
       </div>
     </main>
     <div class="form-actions">
-      <button type="submit" class="save-btn">Сохранить</button>
+      <button type="submit" class="save-btn" @click="submitForm">Сохранить</button>
       <button type="button" @click="goBack" class="back-btn">Назад</button>
     </div>
   </div>
@@ -248,7 +248,8 @@ export default defineComponent({
   padding: 10px 15px;
   border: 1px solid #0B56AD;
   border-radius: 0 20px 20px 0;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  font-family: 'Inter-Light';
   background-color: #EFEFEF;
 }
 
