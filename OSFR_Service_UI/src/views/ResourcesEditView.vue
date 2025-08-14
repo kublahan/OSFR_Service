@@ -181,6 +181,7 @@ export default defineComponent({
   align-items: center;
   min-height: 100vh;
   background-color: #D6E9FD;
+  overflow-y: hidden;
 }
 
 .edit-page-header {
@@ -192,6 +193,7 @@ export default defineComponent({
   align-items: center;
   padding: 0 50px;
   justify-content: right;
+
 }
 
 .edit-page-header .title {
@@ -209,7 +211,6 @@ export default defineComponent({
   background-color: #fff;
   border-radius: 15px;
   box-shadow: 0 5px 10px rgba(26, 25, 92, 0.2);
-  padding: 30px;
   margin-top: 50px;
   width: 94.688rem;
 }
@@ -225,12 +226,12 @@ export default defineComponent({
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 71px;
+  margin-bottom: 63px;
 }
 
 .form-group label {
   width: 16.438rem;
-  height: 3.875rem;
+  height: 3.9375rem;
   font-size: 1.5rem;
   border-radius: 20px 0 0 20px;
   font-family: 'Inter-Medium';
@@ -244,7 +245,7 @@ export default defineComponent({
 
 .form-group input{
   width: 63.25rem;
-  height: 3.938rem;
+  height: 3.9375rem;
   padding: 10px 15px;
   border: 1px solid #0B56AD;
   border-radius: 0 20px 20px 0;
@@ -271,16 +272,13 @@ export default defineComponent({
 
 .form-actions {
   display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
+  margin-top: 3.0625rem;
+  margin-bottom: 3.3875rem;
+  width: 120rem;
+  align-items:center;
 }
 
 .save-btn, .back-btn {
-  padding: 10px 30px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.5rem;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -288,6 +286,13 @@ export default defineComponent({
 .save-btn {
   background-color: #1150B0;
   color: #fff;
+  width: 17.9375rem;
+  margin-left: 51rem;
+  border-radius: 20px;
+  height: 3.75rem;
+  font-size: 28px;
+  font-family: 'Inter-Medium';
+  border: none;
 }
 
 .save-btn:hover {
@@ -295,8 +300,16 @@ export default defineComponent({
 }
 
 .back-btn {
-  background-color: #f0f0f0;
+  background-color: transparent;
   color: #333;
+  margin-left: 28.9375rem;
+  color: #124AA7;
+  border-radius: 10px;
+  font-family: 'Inter-Regular';
+  font-size: 24px;
+  border: 1px solid #0D6BDA;
+  height: 2.6875rem;
+  width: 9.5rem;
 }
 
 .back-btn:hover {
@@ -306,6 +319,7 @@ export default defineComponent({
 .Logo-img{
   height: 54px;
   width: 66px;
-  margin-bottom: 39px;
+  margin-bottom: 25px;
+  margin-top: 23px;
 }
 </style>

@@ -139,6 +139,7 @@ export default defineComponent({
   background-image: linear-gradient(to right, #0D6EDE 0%, #073B78 100%);
   cursor: pointer;
   border-bottom: 1px solid rgba(25, 31, 102, 0.1);
+  height: 47px;
 }
 
 .category-dropdown-item:last-child {

@@ -34,12 +34,12 @@ export default {
   name: 'AddItemDropdown',
   data() {
     return {
-      isDropdownOpen: false // Add this state variable
+      isDropdownOpen: false
     };
   },
   methods: {
     toggleDropdown() {
-      this.isDropdownOpen = !this.isDropdownOpen; // Add this method
+      this.isDropdownOpen = !this.isDropdownOpen;
     }
   }
 };
