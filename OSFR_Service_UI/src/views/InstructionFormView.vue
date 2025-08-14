@@ -89,31 +89,89 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="instruction-form-container">
-    <h1>{{ isEditing ? 'Редактировать инструкцию' : 'Добавить инструкцию' }}</h1>
-    <form @submit.prevent="submitForm">
-      <div class="form-group">
-        <label for="instruction-title">Заголовок</label>
-        <input id="instruction-title" v-model="title" type="text" required class="form-input" />
+  <div class="page-wrapper">
+    <header class="page-header">
+      <div class="title">{{ isEditing ? 'Редактировать инструкцию' : 'Добавить инструкцию' }}</div>
+      <button class="back-btn" @click="$router.push({ name: 'admin' })">Назад</button>
+    </header>
+
+    <main class="main-content">
+      <div class="instruction-form-container">
+        <form @submit.prevent="submitForm">
+          <div class="form-group">
+            <label for="instruction-title">Заголовок</label>
+            <input id="instruction-title" v-model="title" type="text" required class="form-input" />
+          </div>
+          <div class="form-group">
+            <label for="instruction-content">Содержание</label>
+            <div v-if="isLoading" class="loading-message">Загрузка...</div>
+            <RichTextEditor v-else ref="richTextEditorRef" v-model="content" />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="save-button" :disabled="isLoading">
+              Сохранить
+            </button>
+          </div>
+        </form>
       </div>
-      <div class="form-group">
-        <label for="instruction-content">Содержание</label>
-        <div v-if="isLoading">Загрузка...</div>
-        <RichTextEditor v-else ref="richTextEditorRef" v-model="content" />
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="save-button" :disabled="isLoading">
-          Сохранить
-        </button>
-        <button type="button" @click="$router.push({ name: 'admin' })" class="cancel-button">
-          Отмена
-        </button>
-      </div>
-    </form>
+    </main>
   </div>
 </template>
 
 <style scoped>
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #D6E9FD;
+  overflow-x: hidden;
+}
+
+.page-header {
+  width: 100%;
+  height: 7.5rem;
+  background: linear-gradient(to right, #0983FE 12%, #124AA7 41%, #1A185C 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 50px;
+  box-sizing: border-box;
+}
+
+.page-header .title {
+  font-size: 3rem;
+  font-family: 'Lato-SemiBold';
+  text-align: center;
+  flex-grow: 1;
+  margin: 0 auto;
+}
+
+.main-content {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
+  flex-grow: 1;
+}
+
+.back-btn {
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  font-family: 'Inter-Regular';
+  font-size: 24px;
+  height: 2.6875rem;
+  width: 9.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+
 .instruction-form-container {
   max-width: 1000px;
   margin: 40px auto;

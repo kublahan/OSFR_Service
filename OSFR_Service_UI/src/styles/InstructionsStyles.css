@@ -1,3 +1,11 @@
+.ql-editor, .instruction-content {
+  max-width: 800px; 
+  padding: 0 30px; 
+  box-sizing: border-box;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
 .ql-editor h1, .instruction-content h1 {
   text-align: center;
   color: #1a185c;
@@ -13,11 +21,33 @@
   margin-bottom: 0.5em;
 }
 
+.ql-editor h3, .instruction-content h3 {
+  font-size: 1.5em;
+  font-family: 'Lato-SemiBold';
+  color: #1a185c;
+  margin-bottom: 0.5em;
+}
+
+
 .ql-editor p, .instruction-content p {
   line-height: 1.6;
   font-size: 1rem;
   color: #333;
 }
+
+
+.ql-editor .ql-size-small, .instruction-content .ql-size-small {
+  font-size: 0.75rem;
+}
+
+.ql-editor .ql-size-large, .instruction-content .ql-size-large {
+  font-size: 1.5rem;
+}
+
+.ql-editor .ql-size-huge, .instruction-content .ql-size-huge {
+  font-size: 2.5rem;
+}
+
 
 .ql-editor img, .instruction-content img {
   max-width: 100%;
@@ -28,7 +58,27 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .ql-editor a, .instruction-content a {
   color: #1150B0;
   text-decoration: underline;
+}
+
+
+.ql-editor ul, .instruction-content ul,
+.ql-editor ol, .instruction-content ol {
+  padding-left: 2em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+
+.ql-editor .ql-align-center, .instruction-content .ql-align-center {
+  text-align: center;
+}
+.ql-editor .ql-align-right, .instruction-content .ql-align-right {
+  text-align: right;
+}
+.ql-editor .ql-align-justify, .instruction-content .ql-align-justify {
+  text-align: justify;
 }

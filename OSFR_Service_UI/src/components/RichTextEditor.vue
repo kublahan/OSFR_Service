@@ -62,12 +62,9 @@ export default defineComponent({
         });
         
         if (!response.ok) {
-          console.error('Не удалось удалить файл на сервере:', response.statusText);
         } else {
-          console.log('Файл успешно удален:', imageUrl);
         }
       } catch (error) {
-        console.error('Ошибка при удалении изображения:', error);
       }
     };
     
@@ -188,9 +185,25 @@ export default defineComponent({
         imageResize: {
           parchment: Quill.import('parchment'),
           modules: ['Resize', 'DisplaySize', 'Toolbar']
+        },
+
+        keyboard: {
+          bindings: {
+
+            'space': {
+              key: ' ',
+              handler: function(range, context) {
+
+                this.quill.insertText(range.index, '\u00a0'); 
+
+                this.quill.setSelection(range.index + 1);
+
+                return false;
+              }
+            }
+          }
         }
       },
-
     };
     
     watch(() => props.modelValue, (newValue) => {
@@ -201,6 +214,8 @@ export default defineComponent({
 
     const onReady = (quillInstance: any) => {
       initialImageUrls.value = getImagesFromQuill(quillInstance);
+      
+
     };
 
     watch(content, (newValue) => {
@@ -225,11 +240,10 @@ export default defineComponent({
 
 .editor-container {
   max-width: 1200px;
-  margin: 20px auto;
   background-color: #f0f0f0;
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  padding: 20px;
+
   box-sizing: border-box;
 }
 
@@ -237,11 +251,14 @@ export default defineComponent({
 .quill-editor-custom .ql-editor {
   width: 210mm;
   min-height: 297mm;
-  padding: 20mm;
   box-sizing: border-box;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  
 }
 
 
@@ -267,6 +284,9 @@ export default defineComponent({
   transition: all 0.2s ease;
   padding: 8px;
   border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .ql-toolbar button:hover,
@@ -276,7 +296,7 @@ export default defineComponent({
 
 .ql-toolbar button.ql-active,
 .ql-toolbar .ql-picker.ql-active {
-  background-color: #1a185c !important;
+  background-color: rgba(0, 0, 0, 0.08) !important;
   color: #fff !important;
   transform: none;
 }
@@ -303,4 +323,5 @@ export default defineComponent({
   font-size: 1rem;
   line-height: 1.6;
 }
+
 </style>
