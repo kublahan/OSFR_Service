@@ -20,13 +20,14 @@
           </div>
 
           <div class="file-drop">
-              <div class="file-drop-area"
-               @dragover.prevent @drop="handleFileDrop"
-               @click="openFilePicker">
-            <p>Перетащите файл сюда или нажмите, чтобы загрузить</p>
-            <p v-if="software.file" class="file-name">{{ software.file.name }}</p>
-            <input type="file" ref="fileInput" @change="handleFileChange" style="display: none" />
-          </div>
+            <div class="file-drop-area"
+              @dragover.prevent @drop="handleFileDrop"
+              @click="openFilePicker">
+              <p v-if="isEditing && !software.file && originalFile">Текущий файл: {{ originalFile }}</p>
+              <p v-else-if="software.file">Выбран новый файл: {{ software.file.name }}</p>
+              <p v-else>Перетащите файл сюда или нажмите, чтобы загрузить</p>
+              <input type="file" ref="fileInput" @change="handleFileChange" style="display: none" />
+            </div>
           </div>
         
         </form>
@@ -63,6 +64,9 @@ export default defineComponent({
       description: '',
       file: null,
     });
+    
+
+    const originalFile = ref<string | null>(null);
 
     const fileInput = ref<HTMLInputElement | null>(null);
 
@@ -87,28 +91,34 @@ export default defineComponent({
     };
 
     const saveSoftware = async () => {
-
       const categoryId = 6;
 
 
-      if (!software.value.name || !software.value.file) {
-        console.error('Пожалуйста, заполните все обязательные поля (наименование и файл).');
+      if (!software.value.name) {
+        console.error('Пожалуйста, заполните наименование.');
         return;
+      }
+      
+
+      if (!isEditing.value && !software.value.file) {
+          console.error('Пожалуйста, загрузите файл.');
+          return;
       }
 
       const formData = new FormData();
       formData.append('name', software.value.name);
       formData.append('description', software.value.description);
-
       formData.append('category_id', categoryId.toString());
-      
+
+
       if (software.value.file) {
         formData.append('file', software.value.file);
       }
 
       try {
         if (isEditing.value && software.value.id) {
-          await api.put(`/admin/software/${software.value.id}`, formData);
+
+          await api.post(`/admin/software/${software.value.id}`, formData);
         } else {
           await api.post('/admin/software', formData);
         }
@@ -134,6 +144,7 @@ export default defineComponent({
             description: item.description,
             file: null,
           };
+          originalFile.value = item.file_name;
         } catch (error) {
           console.error('Ошибка при получении ПО:', error);
         }
@@ -144,6 +155,7 @@ export default defineComponent({
       isEditing,
       software,
       fileInput,
+      originalFile,
       handleFileDrop,
       handleFileChange,
       openFilePicker,

@@ -7,38 +7,25 @@ import fs from 'fs';
 
 const uploadDir = process.env.SOFTWARE_DIR || path.join(__dirname, '..', '..', 'uploads', 'software');
 
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (!fs.existsSync(uploadDir)) {
-        console.log(`Директория для загрузки файлов не найдена. Создаю: ${uploadDir}`);
-        fs.mkdirSync(uploadDir, { recursive: true });
+      console.log(`Директория для загрузки файлов не найдена. Создаю: ${uploadDir}`);
+      fs.mkdirSync(uploadDir, { recursive: true });
     }
     cb(null, uploadDir); 
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+
+    const name = req.body.name ? req.body.name.replace(/[^\p{L}\p{N}]/gu, '_') : 'software';
+    const uniqueSuffix = Date.now();
+    const fileExtension = path.extname(file.originalname);
+    cb(null, `${name}_${uniqueSuffix}${fileExtension}`);
   }
 });
 
-export const upload = multer({ 
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
-      cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-
-      const uniqueName = `${Date.now()}.exe`;
-      cb(null, uniqueName);
-    }
-  }),
-  fileFilter: (req, file, cb) => {
-
-    cb(null, true);
-  }
-});
+export const upload = multer({ storage: storage });
 
 export const createSoftware = asyncHandler(async (req: Request, res: Response) => {
     console.log('Данные req.body:', req.body);
@@ -68,15 +55,71 @@ export const createSoftware = asyncHandler(async (req: Request, res: Response) =
 export const getSoftwarebyId = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await pool.query('SELECT id, category_id, name, description, file_path FROM software WHERE id = $1', [id]);
+    
     if (result.rows.length > 0) {
-        res.json(result.rows[0]);
+        const item = result.rows[0];
+        let fileName = null;
+        if (item.file_path) {
+            fileName = path.basename(item.file_path);
+        }
+        
+
+        res.json({
+            ...item,
+            file_name: fileName,
+        });
     } else {
         res.status(404).json({ error: 'ПО не найдено' });
     }
 });
 
 export const updateSoftware = asyncHandler(async (req: Request, res: Response) => {
-    res.status(501).json({ message: 'Функция обновления ПО еще не реализована' });
+    const { id } = req.params;
+    const { name, description, category_id } = req.body;
+    
+
+    const newFile = req.file;
+    let filePath: string | null = null;
+    let oldFilePath: string | null = null;
+
+
+    const oldFileResult = await pool.query('SELECT file_path FROM software WHERE id = $1', [id]);
+    if (oldFileResult.rows.length > 0) {
+        oldFilePath = oldFileResult.rows[0].file_path;
+    }
+
+
+    if (newFile) {
+        filePath = newFile.path;
+
+        if (oldFilePath) {
+            fs.unlink(oldFilePath, (err) => {
+                if (err) {
+                    console.error(`Ошибка при удалении старого файла ${oldFilePath}:`, err);
+                }
+            });
+        }
+    } else {
+
+        filePath = oldFilePath;
+    }
+
+
+    const updateQuery = `
+        UPDATE software
+        SET name = $1, description = $2, file_path = $3, category_id = $4
+        WHERE id = $5
+        RETURNING *;
+    `;
+    const updateValues = [name, description, filePath, category_id, id];
+
+    const result = await pool.query(updateQuery, updateValues);
+    
+    if (result.rows.length > 0) {
+        res.status(200).json(result.rows[0]);
+    } else {
+        res.status(404).json({ error: 'ПО не найдено для обновления' });
+    }
 });
 
 

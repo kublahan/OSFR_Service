@@ -8,12 +8,13 @@
       <img src="@/assets/icons/Logo_OSFR.svg" alt="logo" class="logo-auth" />
       <div class="auth-title">Авторизация</div>
       <div class="input-group">
-
         <input type="text" placeholder="Логин" class="login-input" v-model="username" />
       </div>
-      <div class="input-group">
-
-        <input type="password" placeholder="Пароль" class="password-input" v-model="password" />
+      <div class="input-group password-group">
+        <input :type="passwordFieldType" placeholder="Пароль" class="password-input" v-model="password" />
+        <span class="password-toggle-icon" @click="togglePasswordVisibility">
+          <img src="@/assets/icons/View.svg" alt="Show/Hide Password" />
+        </span>
       </div>
       <button class="enter-btn" @click="handleLogin">Войти</button>
       <div class="back-btn-container">
@@ -36,6 +37,7 @@ export default {
       username: '',
       password: '',
       error: null,
+      passwordFieldType: 'password',
     };
   },
   methods: {
@@ -43,20 +45,23 @@ export default {
       this.$router.go(-1);
     },
     async handleLogin() {
-    this.error = null;
-    try {
-      const data = await loginAdmin(this.username.trim(), this.password.trim());
-      localStorage.setItem('adminToken', data.token);
-      
-      setAuthToken(data.token);
+      this.error = null;
+      try {
+        const data = await loginAdmin(this.username.trim(), this.password.trim());
+        localStorage.setItem('adminToken', data.token);
+        
+        setAuthToken(data.token);
 
-      this.$router.push({ name: 'admin' });
-      
-    } catch (err) {
-      console.error('Ошибка входа:', err);
-      this.error = err.response?.data?.msg || 'Неверные учетные данные или ошибка сервера.';
+        this.$router.push({ name: 'admin' });
+        
+      } catch (err) {
+        console.error('Ошибка входа:', err);
+        this.error = err.response?.data?.msg || 'Неверные учетные данные или ошибка сервера.';
+      }
+    },
+    togglePasswordVisibility() {
+      this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
     }
-  },
   },
 };
 </script>
@@ -102,7 +107,6 @@ export default {
   left: 0;
   margin-top: 0;
 
-  margin-top: 89px;
 }
 
 .auth-form {
@@ -115,6 +119,7 @@ export default {
   width: 38.563rem;
   height: 36.125rem;
   margin-top: 4.625rem;
+  margin-bottom: 100px;
 }
 
 .logo-auth {
@@ -132,42 +137,63 @@ export default {
 
 
 
-.login-input {
-  margin: 28px 83px 0px 80px;
-  background-image: url('@/assets/icons/User_alt.svg');
-  background-repeat: no-repeat;
-  background-position: 21px center;
-  background-size: 1.5rem;
-  padding-left: 1.313rem;
-  position: relative;
-
-  display: flex;
-  justify-content: center;
+.input-group {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
+
+.login-input {
+    margin: 28px 83px 0px 80px;
+    background-image: url('@/assets/icons/User_alt.svg');
+    background-repeat: no-repeat;
+    background-position: 21px center;
+    background-size: 1.5rem;
+    padding-left: 50px;
+    position: relative;
+    width: 28.375rem;
+    height: 4.125rem;
+}
+
+
 .password-input {
-  margin: 28px 83px 40px 80px;
-  background-image: url('@/assets/icons/Unlock.svg');
-  background-repeat: no-repeat;
-  background-position: 21px center;
-  background-size: 1.5rem;
-  padding-left: 1.313rem;
-  display: flex;
-  justify-content: center;
-} 
+    margin: 28px 83px 40px 80px;
+    background-image: url('@/assets/icons/Unlock.svg');
+    background-repeat: no-repeat;
+    background-position: 21px center;
+    background-size: 1.5rem;
+    padding-left: 50px;
+    padding-right: 60px;
+    width: 28.375rem;
+    height: 4.125rem;
+}
 
 
 .input-group input {
-  font-family: 'Inter-Light';
-  border: 1px solid #0D6BDA;
-  border-radius: 40px;
-  font-size: 28px;
-  color: #000000;
-  outline: none;
-  background-color: #F9F9F9;
-  padding-left: 50px;
-  width: 28.375rem;
-  height: 4.125rem;
+    font-family: 'Inter-Light';
+    border: 1px solid #0D6BDA;
+    border-radius: 20px;
+    font-size: 28px;
+    color: #000000;
+    outline: none;
+    background-color: #F9F9F9;
+    box-sizing: border-box;
+}
+
+
+.password-toggle-icon {
+    position: absolute;
+    right: 99px;
+    top: 47px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.password-toggle-icon img {
+    width: 29px;
+    height: 29px;
 }
 
 .input-icon {
@@ -211,7 +237,7 @@ export default {
   width: 8.375rem;
   height: 2.188rem;
   box-sizing: border-box;
-  margin-top: 10px;
+  margin-top: 40px;
   align-items: center;
 }
 

@@ -33,7 +33,7 @@ router.delete('/instructions/:id', instructionController.deleteInstruction);
 
 router.post('/software', softwareController.upload.single('file'), softwareController.createSoftware);
 router.get('/software/:id', softwareController.getSoftwarebyId);
-router.put('/software/:id', softwareController.updateSoftware);
+router.post('/software/:id', softwareController.upload.single('file'), softwareController.updateSoftware);
 router.delete('/software/:id', softwareController.deleteSoftware);
 router.get('/software/download/:id', softwareController.downloadSoftware);
 
