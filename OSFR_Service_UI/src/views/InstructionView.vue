@@ -68,88 +68,133 @@ export default defineComponent({
 
 <style scoped>
 @import '@/styles/InstructionsStyles.css';
+@import 'quill/dist/quill.snow.css';
 
 .page-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #D6E9FD;
-    overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #D6E9FD;
+  overflow-x: hidden;
 }
 
 .page-header {
-    width: 100%;
-    height: 7.5rem;
-    background: linear-gradient(to right, #0983FE 12%, #124AA7 41%, #1A185C 100%);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 50px;
-    box-sizing: border-box;
+  width: 100%;
+  height: 7.5rem;
+  background: linear-gradient(to right, #0983FE 12%, #124AA7 41%, #1A185C 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 50px;
+  box-sizing: border-box;
 }
 
 .page-header .title {
-    font-size: 3rem;
-    font-family: 'Lato-SemiBold';
-    text-align: center;
-    flex-grow: 1;
-    margin: 0 auto;
+  font-size: 3rem;
+  font-family: 'Lato-SemiBold';
+  text-align: center;
+  flex-grow: 1;
+  margin: 0 auto;
 }
 
 .main-content {
-    display: flex;
-    justify-content: center;
-    padding: 50px 0;
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
 }
 
 
 .instruction-view-container {
-    max-width: 800px;
-    margin: 0;
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    width: 210mm;
 }
+
 
 .instruction-view-container h1 {
-    text-align: center;
-    color: #1a185c;
-    margin-bottom: 20px;
-    font-size: 2.5rem;
-    font-family: 'Lato-SemiBold';
+  text-align: center;
+  color: #1a185c;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-family: 'Lato-SemiBold';
 }
 
+
 .back-btn {
-    background-color: transparent;
-    color: #fff;
-    border: 1px solid #fff;
-    border-radius: 10px;
-    font-family: 'Inter-Regular';
-    font-size: 24px;
-    height: 2.6875rem;
-    width: 9.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  font-family: 'Inter-Regular';
+  font-size: 24px;
+  height: 2.6875rem;
+  width: 9.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .back-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
+
 .instruction-content {
-    line-height: 1.6;
-    font-size: 1.2rem;
-    color: #333;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+  line-height: 1.6;
+  font-family: "Times New Roman", Times, serif; 
+  font-size: 16px;
+  color: #333;
+}
+
+
+.instruction-content :deep(.ql-editor) {
+  padding: 0;
+  border: none;
+}
+
+
+.instruction-content :deep(.ql-align-center) {
+  text-align: center;
+}
+
+.instruction-content :deep(.ql-align-right) {
+  text-align: right;
+}
+
+.instruction-content :deep(.ql-align-justify) {
+  text-align: justify;
+}
+
+.instruction-content :deep(.ql-align-left) {
+  text-align: left;
+}
+
+
+.instruction-content :deep(p) {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.instruction-content :deep(.ql-indent-1) {
+  margin-left: 3em;
+}
+
+.instruction-content :deep(.ql-indent-2) {
+  margin-left: 6em;
+}
+
+
+.instruction-content :deep(.ql-font-times-new-roman) {
+  font-family: "Times New Roman", Times, serif;
 }
 
 .error-message, .loading-message {
-    text-align: center;
-    padding: 20px;
-    color: #cc0000;
+  text-align: center;
+  padding: 20px;
+  color: #cc0000;
 }
 </style>

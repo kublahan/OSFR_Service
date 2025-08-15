@@ -2,7 +2,7 @@
   <div class="editor-container">
     <QuillEditor
       ref="quillEditor"
-      v-model:content="content" 
+      v-model:content="content"
       contentType="html"
       :options="editorOptions"
       @ready="onReady"
@@ -17,8 +17,12 @@ import { QuillEditor, Quill } from '@vueup/vue-quill';
 import 'quill/dist/quill.snow.css';
 import { ImageResize } from 'quill-image-resize-module-ts';
 
-
 Quill.register('modules/imageResize', ImageResize, true);
+
+
+const Font = Quill.import('formats/font');
+Font.whitelist = ['times-new-roman', 'sans-serif'];
+Quill.register(Font, true);
 
 export default defineComponent({
   name: 'RichTextEditor',
@@ -62,9 +66,12 @@ export default defineComponent({
         });
         
         if (!response.ok) {
+          console.error('Ошибка удаления изображения:', response.statusText);
         } else {
+          console.log('Изображение успешно удалено:', imageUrl);
         }
       } catch (error) {
+        console.error('Ошибка при удалении изображения:', error);
       }
     };
     
@@ -164,18 +171,13 @@ export default defineComponent({
         toolbar: {
           container: [
             ['bold', 'italic', 'underline', 'strike'],
-            ['blockquote', 'code-block'],
             [{ 'header': 1 }, { 'header': 2 }],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
             [{ 'script': 'sub'}, { 'script': 'super' }],
-            [{ 'indent': '-1'}, { 'indent': '+1' }],
-            [{ 'direction': 'rtl' }],
-            [{ 'size': ['small', false, 'large', 'huge'] }], 
+            [{ 'size': ['small', false, 'large', 'huge'] }],
             [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': ['times-new-roman'] }],
             [{ 'color': [] }, { 'background': [] }],
-            [{ 'font': [] }],
-            [{ 'align': [] }],
-            ['link', 'image', 'video'],
+            ['image'],
             ['clean']
           ],
           handlers: {
@@ -186,18 +188,16 @@ export default defineComponent({
           parchment: Quill.import('parchment'),
           modules: ['Resize', 'DisplaySize', 'Toolbar']
         },
-
         keyboard: {
           bindings: {
-
             'space': {
               key: ' ',
               handler: function(range, context) {
 
-                this.quill.insertText(range.index, '\u00a0'); 
-
+                const formats = this.quill.getFormat(range.index - 1);        
+                this.quill.insertText(range.index, '\u00a0', formats);
                 this.quill.setSelection(range.index + 1);
-
+                
                 return false;
               }
             }
@@ -214,8 +214,6 @@ export default defineComponent({
 
     const onReady = (quillInstance: any) => {
       initialImageUrls.value = getImagesFromQuill(quillInstance);
-      
-
     };
 
     watch(content, (newValue) => {
@@ -235,30 +233,73 @@ export default defineComponent({
 
 <style>
 
-@import '@/styles/InstructionsStyles.css';
-
-
-.editor-container {
-  max-width: 1200px;
-  background-color: #f0f0f0;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-
-  box-sizing: border-box;
+.quill-editor-custom {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
 
 .quill-editor-custom .ql-editor {
-  width: 210mm;
-  min-height: 297mm;
+  padding: 30px;
   box-sizing: border-box;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 0 auto;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.quill-editor-custom .ql-editor h1,
+.quill-editor-custom .ql-editor h2,
+.quill-editor-custom .ql-editor h3 {
+  font-family: 'Lato-SemiBold', sans-serif;
+  color: #1a185c;
+  margin-bottom: 0.5em;
+}
+
+.quill-editor-custom .ql-editor h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+.quill-editor-custom .ql-editor h2 {
+  font-size: 2em;
+}
+.quill-editor-custom .ql-editor h3 {
+  font-size: 1.5em;
+}
+
+.quill-editor-custom .ql-editor p {
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #333;
+}
+
+.quill-editor-custom .ql-editor .ql-size-small { font-size: 0.75rem; }
+.quill-editor-custom .ql-editor .ql-size-large { font-size: 1.5rem; }
+.quill-editor-custom .ql-editor .ql-size-huge { font-size: 2.5rem; }
+
+.quill-editor-custom .ql-editor img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.quill-editor-custom .ql-editor a {
+  color: #1150B0;
+  text-decoration: underline;
+}
+
+.quill-editor-custom .ql-editor ul,
+.quill-editor-custom .ql-editor ol {
+  padding-left: 2em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 
@@ -266,37 +307,37 @@ export default defineComponent({
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: #D6E9FD;
+  background-color: #fff;
   border: 1px solid #c9dff7;
   border-radius: 8px 8px 0 0;
   padding: 12px 15px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
 }
 
-
-.ql-toolbar button,
-.ql-toolbar .ql-picker {
+.ql-toolbar button, .ql-toolbar .ql-picker {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  min-width: 36px;
   border: none !important;
   background-color: transparent !important;
   transition: all 0.2s ease;
-  padding: 8px;
+  padding: 0 8px;
   border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.ql-toolbar button:hover,
-.ql-toolbar .ql-picker:hover {
+.ql-toolbar button:hover, .ql-toolbar .ql-picker:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
+  transform: scale(1.05);
 }
 
-.ql-toolbar button.ql-active,
-.ql-toolbar .ql-picker.ql-active {
-  background-color: rgba(0, 0, 0, 0.08) !important;
+.ql-toolbar button.ql-active, .ql-toolbar .ql-picker.ql-active {
+  background-color: #007bff !important;
   color: #fff !important;
   transform: none;
 }
@@ -306,22 +347,51 @@ export default defineComponent({
   height: 20px;
 }
 
+.ql-snow .ql-picker-label {
+  display: flex;
+  align-items: center;
+  min-width: 80px;
+  font-size: 14px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  height: 100%;
+}
 
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="small"]::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="small"]::before { content: '12px'; }
-.ql-snow .ql-picker.ql-size .ql-picker-label::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item::before { content: '16px'; }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="large"]::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="large"]::before { content: '20px'; }
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="huge"]::before,
-.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="huge"]::before { content: '24px'; }
+.ql-snow .ql-picker-label::before {
+  line-height: 1.2;
+}
 
+.ql-snow .ql-picker-label:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.ql-snow .ql-picker-options {
+  background-color: #fff;
+  border: 1px solid #c9dff7;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 8px 0;
+}
+
+.ql-snow .ql-picker-item:hover {
+  background-color: #e6f2ff;
+}
+
+.ql-font-times-new-roman { font-family: "Times New Roman", Times, serif; }
+
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="times-new-roman"]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="times-new-roman"]::before { content: 'Times New Roman'; }
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="small"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="small"]::before { content: '12px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label::before, .ql-snow .ql-picker.ql-size .ql-picker-item::before { content: '16px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="large"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="large"]::before { content: '20px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="huge"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="huge"]::before { content: '24px'; }
 
 .ql-container.ql-snow {
   border: none;
-  font-family: 'Inter-Regular', sans-serif;
-  font-size: 1rem;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
   line-height: 1.6;
 }
-
 </style>

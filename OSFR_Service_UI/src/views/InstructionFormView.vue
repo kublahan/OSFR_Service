@@ -171,22 +171,13 @@ export default defineComponent({
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-
 .instruction-form-container {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #f8f8f8;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.instruction-form-container h1 {
-  text-align: center;
-  color: #1a185c;
-  margin-bottom: 20px;
-  font-size: 2.5rem;
-  font-family: 'Lato-SemiBold';
+  max-width: none;
+  padding: 0;
+  margin: 0 auto;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
 }
 
 .form-group {
@@ -241,11 +232,5 @@ export default defineComponent({
 
 .cancel-button:hover {
   background-color: #bbb;
-}
-
-.instruction-form-container :deep(.quill-editor-custom) {
-  max-width: none;
-  margin: 0;
-  padding: 0;
 }
 </style>
