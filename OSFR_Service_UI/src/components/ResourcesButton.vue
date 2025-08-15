@@ -9,6 +9,7 @@ interface ButtonItem {
     service: string | null;
     url: string | null;
     type: 'resource' | 'instruction' | 'software';
+    description: string | null;
 }
 
 export default defineComponent({
@@ -22,7 +23,6 @@ export default defineComponent({
     emits: ['action'],
     setup(props, { emit }) {
         const handleAction = () => {
-            // Просто испускаем событие с полным объектом item
             emit('action', props.item);
         };
         return {
@@ -36,7 +36,8 @@ export default defineComponent({
     <div class="main-container" @click="handleAction">
         <div class="content-wrapper">
             <div class="name-item">{{ item.name }}</div>
-            <div class="name-serv">{{ item.service || '—' }}</div>
+            <div class="item-service">{{ item.service}}</div>
+            <div class="item-description">{{ item.description}}</div>
             <div class="action-btn">
                 <span v-if="item.type === 'software'">Скачать</span>
                 <span v-else-if="item.type === 'instruction'">Просмотреть</span>
@@ -50,7 +51,7 @@ export default defineComponent({
 .main-container {
     display: block;
     width: 21rem;
-    height: 11.25rem;
+    min-height: 11.25rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     padding: 1.5625rem;
@@ -71,22 +72,30 @@ export default defineComponent({
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 0.5rem;
 }
 
 .name-item {
     font-size: 1.375rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
     font-family: 'Inter-Regular';
     color: #000000;
     word-break: break-word;
 }
 
-.name-serv {
+.item-service {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 0;
+    word-break: break-word;
+}
+
+.item-description {
     font-size: 1rem;
     color: #666;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     word-break: break-word;
+
 }
 
 .action-btn {
@@ -98,6 +107,7 @@ export default defineComponent({
     text-align: center;
     width: fit-content;
     align-self: flex-end;
+    margin-top: auto;
 }
 
 
@@ -105,12 +115,15 @@ export default defineComponent({
 @media (max-width: 1200px) {
     .main-container {
         width: 18rem;
-        height: 10rem;
+        min-height: 10rem;
     }
     .name-item {
         font-size: 1.2rem;
     }
-    .name-serv {
+    .item-service {
+      font-size: 0.8rem;
+    }
+    .item-description {
         font-size: 0.9rem;
     }
 }
@@ -123,7 +136,10 @@ export default defineComponent({
     .name-item {
         font-size: 1.1rem;
     }
-    .name-serv {
+    .item-service {
+      font-size: 0.7rem;
+    }
+    .item-description {
         font-size: 0.8rem;
     }
 }

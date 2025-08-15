@@ -11,6 +11,7 @@ interface TableItem {
     service: string | null;
     url: string | null;
     type: 'resource' | 'instruction' | 'software';
+    description: string | null;
 }
 
 export default defineComponent({
@@ -154,16 +155,24 @@ const downloadItem = async (item: TableItem) => {
         <tr v-for="item in items" :key="item.id">
           <td class="category">{{ item.category_name }}</td>
           <td class="name">{{ item.name }}</td>
-          <td>{{ item.service || '—' }}</td>
+          <td>{{ item.service || item.description || '—' }}</td>
           <td>
             <div class="actions-container">
               <a
-                v-if="item.type !== 'software'"
+                v-if="item.type === 'resource'"
                 href="#"
                 @click.prevent="openItem(item)"
                 class="action-btn"
               >
                 Открыть
+              </a>
+              <a
+                v-if="item.type === 'instruction'"
+                href="#"
+                @click.prevent="openItem(item)"
+                class="action-btn"
+              >
+                Перейти
               </a>
               <button 
                 v-if="item.type === 'software'"
@@ -224,6 +233,7 @@ const downloadItem = async (item: TableItem) => {
 .table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .table th {
@@ -242,6 +252,8 @@ const downloadItem = async (item: TableItem) => {
     font-size: 25px;
     font-family: 'Inter-Regular';
     text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 td.category {

@@ -20,6 +20,37 @@ import { ImageResize } from 'quill-image-resize-module-ts';
 Quill.register('modules/imageResize', ImageResize, true);
 
 
+const BlockEmbed = Quill.import('blots/block/embed');
+class ImageBlot extends BlockEmbed {
+  static blotName = 'image';
+  static tagName = 'img';
+  static className = 'custom-image';
+
+  static create(value: any) {
+    const node = super.create();
+    if (typeof value === 'object') {
+      node.setAttribute('src', value.src);
+      if (value.align) {
+        node.style.display = 'block';
+        node.style.margin = '0 auto';
+      }
+    } else {
+      node.setAttribute('src', value);
+    }
+    return node;
+  }
+
+  static value(node: any) {
+    return {
+      src: node.getAttribute('src'),
+      align: node.getAttribute('class')
+    };
+  }
+}
+
+ImageBlot.allowedFormats = ['align'];
+Quill.register(ImageBlot, true);
+
 const Font = Quill.import('formats/font');
 Font.whitelist = ['times-new-roman', 'sans-serif'];
 Quill.register(Font, true);
@@ -178,6 +209,7 @@ export default defineComponent({
             [{ 'font': ['times-new-roman'] }],
             [{ 'color': [] }, { 'background': [] }],
             ['image'],
+            [{ 'align': [] }], 
             ['clean']
           ],
           handlers: {
@@ -193,11 +225,9 @@ export default defineComponent({
             'space': {
               key: ' ',
               handler: function(range, context) {
-
-                const formats = this.quill.getFormat(range.index - 1);        
+                const formats = this.quill.getFormat(range.index - 1); 
                 this.quill.insertText(range.index, '\u00a0', formats);
                 this.quill.setSelection(range.index + 1);
-                
                 return false;
               }
             }
@@ -233,6 +263,29 @@ export default defineComponent({
 
 <style>
 
+.ql-editor .custom-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+}
+
+
+.ql-editor .ql-align-left .custom-image {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.ql-editor .ql-align-center .custom-image {
+  margin: 20px auto;
+}
+
+.ql-editor .ql-align-right .custom-image {
+  margin-left: auto;
+  margin-right: 0;
+}
+
 .quill-editor-custom {
   width: 210mm;
   min-height: 297mm;
@@ -241,7 +294,6 @@ export default defineComponent({
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
-
 
 .quill-editor-custom .ql-editor {
   padding: 30px;
@@ -277,15 +329,10 @@ export default defineComponent({
   color: #333;
 }
 
-.quill-editor-custom .ql-editor .ql-size-small { font-size: 0.75rem; }
-.quill-editor-custom .ql-editor .ql-size-large { font-size: 1.5rem; }
-.quill-editor-custom .ql-editor .ql-size-huge { font-size: 2.5rem; }
 
 .quill-editor-custom .ql-editor img {
   max-width: 100%;
   height: auto;
-  display: block;
-  margin: 20px auto;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }

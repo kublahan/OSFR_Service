@@ -148,31 +148,97 @@ export default defineComponent({
   font-family: "Times New Roman", Times, serif; 
   font-size: 16px;
   color: #333;
+  padding: 30px;
 }
 
 
-.instruction-content :deep(.ql-editor) {
-  padding: 0;
-  border: none;
+.instruction-content :deep(h1),
+.instruction-content :deep(h2),
+.instruction-content :deep(h3),
+.instruction-content :deep(h4),
+.instruction-content :deep(h5),
+.instruction-content :deep(h6) {
+    font-family: 'Lato-SemiBold', sans-serif;
+    color: #1a185c;
+    margin-bottom: 0.5em;
+    font-size: 1.5em;
 }
+
+.instruction-content :deep(h1) {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.instruction-content :deep(h2) {
+    font-size: 2em;
+}
+
+.instruction-content :deep(h3) {
+    font-size: 1.5em;
+}
+
+.instruction-content :deep(h4) {
+    font-size: 1.25em;
+}
+
+.instruction-content :deep(h5) {
+    font-size: 1.1em;
+}
+
+.instruction-content :deep(h6) {
+    font-size: 1em;
+}
+
+
+.instruction-content :deep(.ql-size-small) { font-size: 0.75rem; }
+.instruction-content :deep(.ql-size-large) { font-size: 1.5rem; }
+.instruction-content :deep(.ql-size-huge) { font-size: 2.5rem; }
+.instruction-content :deep(.ql-editor) { font-size: 16px; }
+
 
 
 .instruction-content :deep(.ql-align-center) {
-  text-align: center;
+    text-align: center;
 }
 
 .instruction-content :deep(.ql-align-right) {
-  text-align: right;
+    text-align: right;
 }
 
 .instruction-content :deep(.ql-align-justify) {
-  text-align: justify;
+    text-align: justify;
 }
 
 .instruction-content :deep(.ql-align-left) {
-  text-align: left;
+    text-align: left;
 }
 
+
+
+.instruction-content :deep(img) {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+  margin: 20px auto;
+}
+
+
+.instruction-content :deep(.ql-align-left) img {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.instruction-content :deep(.ql-align-right) img {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.instruction-content :deep(.ql-align-center) img {
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .instruction-content :deep(p) {
   margin: 0;
