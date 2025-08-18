@@ -37,6 +37,8 @@ class ImageBlot extends BlockEmbed {
     } else {
       node.setAttribute('src', value);
     }
+    node.style.display = 'block';
+    node.style.margin = '0 auto';
     return node;
   }
 
@@ -262,15 +264,84 @@ export default defineComponent({
 </script>
 
 <style>
-
-.ql-editor .custom-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin: 20px auto;
+.quill-editor-custom {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
+
+.ql-editor, .instruction-content {
+  max-width: 800px;
+  padding: 30px;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  word-break: break-word;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.ql-container.ql-snow {
+  border: none;
+}
+
+.ql-editor h1, .instruction-content h1,
+.ql-editor h2, .instruction-content h2,
+.ql-editor h3, .instruction-content h3 {
+  font-family: 'Lato-SemiBold', sans-serif;
+  color: #1a185c;
+  margin-bottom: 0.5em;
+}
+
+.ql-editor h1, .instruction-content h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.ql-editor h2, .instruction-content h2 {
+  font-size: 2em;
+}
+
+.ql-editor h3, .instruction-content h3 {
+  font-size: 1.5em;
+}
+
+.ql-editor p, .instruction-content p {
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #333;
+}
+
+
+.ql-editor .ql-size-small, .instruction-content .ql-size-small {
+  font-size: 0.75rem;
+}
+
+.ql-editor .ql-size-large, .instruction-content .ql-size-large {
+  font-size: 1.5rem;
+}
+
+.ql-editor .ql-size-huge, .instruction-content .ql-size-huge {
+  font-size: 2.5rem;
+}
+
+
+.ql-editor img, .instruction-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ql-editor .custom-image {
+  margin: 20px auto;
+}
 
 .ql-editor .ql-align-left .custom-image {
   margin-left: 0;
@@ -286,67 +357,28 @@ export default defineComponent({
   margin-right: 0;
 }
 
-.quill-editor-custom {
-  width: 210mm;
-  min-height: 297mm;
-  margin: 0 auto;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-}
 
-.quill-editor-custom .ql-editor {
-  padding: 30px;
-  box-sizing: border-box;
-  font-family: "Times New Roman", Times, serif;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.quill-editor-custom .ql-editor h1,
-.quill-editor-custom .ql-editor h2,
-.quill-editor-custom .ql-editor h3 {
-  font-family: 'Lato-SemiBold', sans-serif;
-  color: #1a185c;
-  margin-bottom: 0.5em;
-}
-
-.quill-editor-custom .ql-editor h1 {
-  text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
-.quill-editor-custom .ql-editor h2 {
-  font-size: 2em;
-}
-.quill-editor-custom .ql-editor h3 {
-  font-size: 1.5em;
-}
-
-.quill-editor-custom .ql-editor p {
-  line-height: 1.6;
-  font-size: 1rem;
-  color: #333;
-}
-
-
-.quill-editor-custom .ql-editor img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.quill-editor-custom .ql-editor a {
+.ql-editor a, .instruction-content a {
   color: #1150B0;
   text-decoration: underline;
 }
 
-.quill-editor-custom .ql-editor ul,
-.quill-editor-custom .ql-editor ol {
+.ql-editor ul, .instruction-content ul,
+.ql-editor ol, .instruction-content ol {
   padding-left: 2em;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
+}
+
+
+.ql-editor .ql-align-center, .instruction-content .ql-align-center {
+  text-align: center;
+}
+.ql-editor .ql-align-right, .instruction-content .ql-align-right {
+  text-align: right;
+}
+.ql-editor .ql-align-justify, .instruction-content .ql-align-justify {
+  text-align: justify;
 }
 
 
@@ -365,39 +397,49 @@ export default defineComponent({
   gap: 8px;
 }
 
-.ql-toolbar button, .ql-toolbar .ql-picker {
+
+.ql-toolbar button, 
+.ql-toolbar .ql-picker,
+.ql-toolbar .ql-formats {
+  height: 30px;
   display: inline-flex;
-  justify-content: center;
+
   align-items: center;
-  height: 36px;
-  min-width: 36px;
   border: none !important;
   background-color: transparent !important;
   transition: all 0.2s ease;
-  padding: 0 8px;
   border-radius: 4px;
+  padding: 0;
+
 }
 
-.ql-toolbar button:hover, .ql-toolbar .ql-picker:hover {
+
+.ql-toolbar button:hover, 
+.ql-toolbar .ql-picker:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
   transform: scale(1.05);
 }
 
-.ql-toolbar button.ql-active, .ql-toolbar .ql-picker.ql-active {
+.ql-toolbar button.ql-active, 
+.ql-toolbar .ql-picker.ql-active {
   background-color: #007bff !important;
   color: #fff !important;
   transform: none;
 }
 
+
 .ql-toolbar svg {
   width: 20px;
   height: 20px;
+  stroke: #444;
 }
 
+.ql-toolbar button.ql-active svg {
+  stroke: #fff;
+}
+
+
 .ql-snow .ql-picker-label {
-  display: flex;
-  align-items: center;
-  min-width: 80px;
   font-size: 14px;
   padding: 0 10px;
   border: 1px solid transparent;
@@ -409,9 +451,6 @@ export default defineComponent({
   line-height: 1.2;
 }
 
-.ql-snow .ql-picker-label:hover {
-  background-color: rgba(0, 0, 0, 0.08);
-}
 
 .ql-snow .ql-picker-options {
   background-color: #fff;
@@ -425,6 +464,7 @@ export default defineComponent({
   background-color: #e6f2ff;
 }
 
+
 .ql-font-times-new-roman { font-family: "Times New Roman", Times, serif; }
 
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="times-new-roman"]::before,
@@ -434,11 +474,4 @@ export default defineComponent({
 .ql-snow .ql-picker.ql-size .ql-picker-label::before, .ql-snow .ql-picker.ql-size .ql-picker-item::before { content: '16px'; }
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="large"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="large"]::before { content: '20px'; }
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value="huge"]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="huge"]::before { content: '24px'; }
-
-.ql-container.ql-snow {
-  border: none;
-  font-family: "Times New Roman", Times, serif;
-  font-size: 16px;
-  line-height: 1.6;
-}
 </style>
