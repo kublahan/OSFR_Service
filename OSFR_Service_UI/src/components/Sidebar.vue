@@ -3,9 +3,6 @@
     <div class="sidebar-head">
       Корпоративный ресурс ОСФР
       <br>по г. Москве и Московской области
-      <button v-if="isMobile" @click="toggleSidebar" class="close-btn">
-        &times;
-      </button>
     </div>
     
     <div
@@ -30,12 +27,13 @@
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
+import { Category } from '@/types';
 
 export default defineComponent({
   name: 'Sidebar',
   props: {
     categories: {
-      type: Array as PropType<{id: number | string, name: string}[]>,
+      type: Array as PropType<Category[]>,
       required: true,
       default: () => []
     }
@@ -76,6 +74,7 @@ export default defineComponent({
   padding: 1rem;
   text-align: center;
   transition: transform 0.3s ease-in-out;
+  overflow-y: auto; 
 }
 
 .sidebar-head {

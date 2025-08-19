@@ -45,12 +45,7 @@ import { defineComponent, ref, onMounted, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '@/api/auth';
 import EditCategoryDropdown from '@/components/EditCategoryDropdown.vue';
-
-
-interface Category {
-  id: number | string;
-  name: string;
-}
+import { Category } from '@/types';
 
 
 interface FormData {
@@ -142,8 +137,8 @@ export default defineComponent({
     onMounted(async () => {
       await fetchCategories();
 
-      if (isEditMode.value) {
-        await fetchResourceData(props.id);
+      if (props.id) {
+          await fetchResourceData(props.id);
       }
     });
 

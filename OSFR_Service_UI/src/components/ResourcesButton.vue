@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 
-interface ButtonItem {
+export interface ButtonItem {
     id: number | string;
     category_id: number | string;
     category_name?: string;

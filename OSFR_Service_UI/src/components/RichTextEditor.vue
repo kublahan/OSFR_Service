@@ -17,68 +17,11 @@ import { QuillEditor, Quill } from '@vueup/vue-quill';
 import 'quill/dist/quill.snow.css';
 import { ImageResize } from 'quill-image-resize-module-ts';
 
+
 Quill.register('modules/imageResize', ImageResize, true);
 
 
-const BlockEmbed = Quill.import('blots/block/embed');
-class ImageBlot extends BlockEmbed {
-    static blotName = 'image';
-    static tagName = 'img';
-    static className = 'custom-image';
-
-
-    static formats(node: any) {
-        const formats: { [key: string]: any } = {};
-        if (node.hasAttribute('src')) {
-            formats.src = node.getAttribute('src');
-        }
-        if (node.hasAttribute('width')) {
-            formats.width = node.getAttribute('width');
-        }
-        if (node.hasAttribute('height')) {
-            formats.height = node.getAttribute('height');
-        }
-        if (node.style.display === 'block' && node.style.margin === '0px auto') {
-            formats.align = 'center';
-        }
-        return formats;
-    }
-
-    static create(value: any) {
-        const node = super.create();
-        node.setAttribute('src', value.src);
-
-
-        if (value.width) {
-            node.setAttribute('width', value.width);
-        }
-        if (value.height) {
-            node.setAttribute('height', value.height);
-        }
-
-
-        if (value.align === 'center') {
-            node.style.display = 'block';
-            node.style.margin = '0 auto';
-        }
-        return node;
-    }
-
-
-    static value(node: any) {
-        return {
-            src: node.getAttribute('src'),
-            width: node.getAttribute('width'),
-            height: node.getAttribute('height'),
-            align: node.style.margin === '0px auto' ? 'center' : null
-        };
-    }
-}
-
-ImageBlot.allowedFormats = ['align'];
-Quill.register(ImageBlot, true);
-
-const Font = Quill.import('formats/font');
+const Font = Quill.import('formats/font') as any;
 Font.whitelist = ['times-new-roman', 'sans-serif'];
 Quill.register(Font, true);
 
@@ -107,7 +50,7 @@ export default defineComponent({
     const getImagesFromQuill = (quillInstance: any): Set<string> => {
       if (!quillInstance) return new Set();
       const images = quillInstance.root.querySelectorAll('img');
-      return new Set(Array.from(images).map(img => img.getAttribute('src') || ''));
+      return new Set(Array.from(images).map((img: any) => img.getAttribute('src') || ''));
     };
 
     const deleteImageFromServer = async (imageUrl: string) => {
@@ -171,7 +114,7 @@ export default defineComponent({
       const parser = new DOMParser();
       const doc = parser.parseFromString(finalContent, 'text/html');
       const images = doc.querySelectorAll('img');
-      const currentImageUrls = new Set(Array.from(images).map(img => img.getAttribute('src') || ''));
+      const currentImageUrls = new Set(Array.from(images).map((img: any) => img.getAttribute('src') || ''));
       
       const imagesToDelete = new Set<string>();
 
@@ -250,7 +193,7 @@ export default defineComponent({
           bindings: {
             'space': {
               key: ' ',
-              handler: function(range, context) {
+              handler: function(this: { quill: any }, range: any, context: any) {
                 const formats = this.quill.getFormat(range.index - 1); 
                 this.quill.insertText(range.index, '\u00a0', formats);
                 this.quill.setSelection(range.index + 1);
@@ -286,7 +229,6 @@ export default defineComponent({
   },
 });
 </script>
-
 <style>
 .quill-editor-custom {
   width: 210mm;

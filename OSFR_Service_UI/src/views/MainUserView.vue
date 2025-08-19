@@ -57,6 +57,11 @@ import Sidebar from '@/components/Sidebar.vue';
 import SearchInput from '@/components/SearchInput.vue';
 import ResourcesButton from '../components/ResourcesButton.vue';
 
+interface Category {
+    id: number | string;
+    name: string;
+}
+
 interface TableItem {
     id: number | string;
     category_id: number | string;
@@ -65,6 +70,7 @@ interface TableItem {
     service: string | null;
     url: string | null;
     type: 'resource' | 'instruction' | 'software';
+    description: string | null; 
 }
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
@@ -104,7 +110,7 @@ export default defineComponent({
 
         const fetchCategories = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/categories`);
+                const response = await axios.get<Category[]>(`${API_BASE_URL}/api/categories`);
                 categories.value = response.data;
             } catch (error) {
                 console.error('Error fetching categories:', error);
@@ -113,11 +119,12 @@ export default defineComponent({
 
         const fetchItems = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/items`);
+                const response = await axios.get<TableItem[]>(`${API_BASE_URL}/api/items`);
                 items.value = response.data.map((item: any) => ({
                     ...item,
                     category_name: getCategoryName(item.category_id),
-                    type: item.type || 'resource'
+                    type: item.type || 'resource',
+                    description: item.description || null,
                 }));
                 applyFilters();
             } catch (error) {
@@ -183,7 +190,7 @@ export default defineComponent({
         const downloadItem = async (item: TableItem) => {
             if (item.type !== 'software') return;
             try {
-                const response = await api.get(`/software/download/${item.id}`, {
+                const response = await api.get<Blob>(`/software/download/${item.id}`, {
                     responseType: 'blob'
                 });
                 
@@ -262,6 +269,8 @@ export default defineComponent({
     z-index: 999;
     background-color: white;
     padding: 2.25rem 2.5625rem;
+    overflow-y: auto; 
+    min-height: 100vh;
 }
 
 .content-area {

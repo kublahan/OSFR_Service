@@ -40,7 +40,7 @@ import CategoryDropdown from '@/components/CategoryDropdown.vue';
 import MainTable from '@/components/MainTable.vue';
 import AddItemDropdown from '@/components/AddItemDropdown.vue';
 
-interface TableItem {
+export interface TableItem {
     id: number | string;
     category_id: number | string;
     category_name?: string;
@@ -48,6 +48,7 @@ interface TableItem {
     service: string | null;
     url: string | null;
     type: 'resource' | 'instruction' | 'software';
+    description: string | null;
 }
 
 export default defineComponent({

@@ -33,7 +33,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
 
-interface Category {
+export interface Category {
   id: number | string;
   name: string;
 }

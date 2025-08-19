@@ -3,7 +3,7 @@ import api from '@/api/auth';
 import { defineComponent, ref, PropType } from 'vue';
 import { useRouter } from 'vue-router';
 
-interface TableItem {
+export interface TableItem {
     id: number | string;
     category_id: number | string;
     category_name?: string;
@@ -96,7 +96,7 @@ export default defineComponent({
 const downloadItem = async (item: TableItem) => {
     if (item.type === 'software') {
         try {
-            const response = await api.get(`/software/download/${item.id}`, {
+            const response = await api.get<Blob>(`/software/download/${item.id}`, {
                 responseType: 'blob'
             });
 
