@@ -45,7 +45,7 @@ export default defineComponent({
 <template>
     <div class="page-wrapper">
         <header class="page-header">
-            <div class="title">Инструкция</div>
+            <div class="title">Просмотри инструкции</div>
             <button class="back-btn" @click="goBack">Назад</button>
         </header>
 
@@ -85,9 +85,9 @@ export default defineComponent({
   color: #fff;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 50px;
+  justify-content: center;
   box-sizing: border-box;
+  
 }
 
 .page-header .title {
@@ -95,7 +95,6 @@ export default defineComponent({
   font-family: 'Lato-SemiBold';
   text-align: center;
   flex-grow: 1;
-  margin: 0 auto;
 }
 
 .main-content {
@@ -136,6 +135,7 @@ export default defineComponent({
   width: 9.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-right: 50px;
 }
 
 .back-btn:hover {

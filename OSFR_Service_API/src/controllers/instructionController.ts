@@ -114,7 +114,6 @@ export const updateInstruction = asyncHandler(async (
         const { id } = req.params;
         const { title, content, category_id } = req.body;
 
-        console.log('Received payload for updating instruction:', { id, title, content, category_id });
         
         if (!title || !content || !category_id) {
             res.status(400).json({ error: 'Missing required fields: title, content, and category_id are required.' });

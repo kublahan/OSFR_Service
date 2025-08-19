@@ -14,6 +14,5 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_DATABASE,
     schema: 'public',
     entities: [Admin],
-    synchronize: false,               // Только для разработки!
     logging: false
 });

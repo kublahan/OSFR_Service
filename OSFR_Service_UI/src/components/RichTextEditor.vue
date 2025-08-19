@@ -22,32 +22,57 @@ Quill.register('modules/imageResize', ImageResize, true);
 
 const BlockEmbed = Quill.import('blots/block/embed');
 class ImageBlot extends BlockEmbed {
-  static blotName = 'image';
-  static tagName = 'img';
-  static className = 'custom-image';
+    static blotName = 'image';
+    static tagName = 'img';
+    static className = 'custom-image';
 
-  static create(value: any) {
-    const node = super.create();
-    if (typeof value === 'object') {
-      node.setAttribute('src', value.src);
-      if (value.align) {
-        node.style.display = 'block';
-        node.style.margin = '0 auto';
-      }
-    } else {
-      node.setAttribute('src', value);
+
+    static formats(node: any) {
+        const formats: { [key: string]: any } = {};
+        if (node.hasAttribute('src')) {
+            formats.src = node.getAttribute('src');
+        }
+        if (node.hasAttribute('width')) {
+            formats.width = node.getAttribute('width');
+        }
+        if (node.hasAttribute('height')) {
+            formats.height = node.getAttribute('height');
+        }
+        if (node.style.display === 'block' && node.style.margin === '0px auto') {
+            formats.align = 'center';
+        }
+        return formats;
     }
-    node.style.display = 'block';
-    node.style.margin = '0 auto';
-    return node;
-  }
 
-  static value(node: any) {
-    return {
-      src: node.getAttribute('src'),
-      align: node.getAttribute('class')
-    };
-  }
+    static create(value: any) {
+        const node = super.create();
+        node.setAttribute('src', value.src);
+
+
+        if (value.width) {
+            node.setAttribute('width', value.width);
+        }
+        if (value.height) {
+            node.setAttribute('height', value.height);
+        }
+
+
+        if (value.align === 'center') {
+            node.style.display = 'block';
+            node.style.margin = '0 auto';
+        }
+        return node;
+    }
+
+
+    static value(node: any) {
+        return {
+            src: node.getAttribute('src'),
+            width: node.getAttribute('width'),
+            height: node.getAttribute('height'),
+            align: node.style.margin === '0px auto' ? 'center' : null
+        };
+    }
 }
 
 ImageBlot.allowedFormats = ['align'];
@@ -207,7 +232,6 @@ export default defineComponent({
             [{ 'header': 1 }, { 'header': 2 }],
             [{ 'script': 'sub'}, { 'script': 'super' }],
             [{ 'size': ['small', false, 'large', 'huge'] }],
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
             [{ 'font': ['times-new-roman'] }],
             [{ 'color': [] }, { 'background': [] }],
             ['image'],

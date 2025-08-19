@@ -99,7 +99,7 @@ export default defineComponent({
       <div class="instruction-form-container">
         <form @submit.prevent="submitForm">
           <div class="form-group">
-            <label for="instruction-title">Заголовок</label>
+            <label for="instruction-title">Название</label>
             <input id="instruction-title" v-model="title" type="text" required class="form-input" />
           </div>
           <div class="form-group">

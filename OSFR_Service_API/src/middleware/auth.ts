@@ -24,7 +24,6 @@ export const verifyToken = (token: string): { userId: string } => {
   try {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as { userId: string };
-    console.log('[AUTH] Токен успешно верифицирован. userId:', decoded.userId);
     return decoded;
   } catch (error) {
     console.error('[AUTH] Ошибка верификации токена:', error);
@@ -33,7 +32,6 @@ export const verifyToken = (token: string): { userId: string } => {
 };
 
 export const adminAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  console.log('[AUTH] Запуск adminAuthMiddleware...');
 
   if (!AppDataSource.isInitialized) {
     console.error('[AUTH] Ошибка: AppDataSource не инициализирован!');
@@ -41,22 +39,18 @@ export const adminAuthMiddleware = async (req: Request, res: Response, next: Nex
   }
 
   const authHeader = req.headers.authorization;
-  console.log('[AUTH] Заголовок Authorization:', authHeader);
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    console.log('[AUTH] Заголовок Authorization отсутствует или имеет неверный формат.');
     return res.status(401).json({
       msg: 'Токен авторизации отсутствует или имеет неверный формат. Используйте схему Bearer'
     });
   }
 
   const token = authHeader.split(' ')[1];
-  console.log('[AUTH] Извлеченный токен:', token);
 
   try {
 
     const { userId } = verifyToken(token);
-    console.log('[AUTH] Поиск администратора с ID:', userId);
 
     const adminRepository = AppDataSource.getRepository(Admin);
 
@@ -65,13 +59,11 @@ export const adminAuthMiddleware = async (req: Request, res: Response, next: Nex
     });
 
     if (!admin) {
-      console.log('[AUTH] Администратор с ID', userId, 'не найден в базе данных.');
       return res.status(401).json({
         msg: 'Администратор не найден'
       });
     }
 
-    console.log('[AUTH] Администратор успешно найден:', admin.username);
     req.admin = admin;
     next();
 

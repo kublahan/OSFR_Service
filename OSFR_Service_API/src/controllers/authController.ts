@@ -6,8 +6,6 @@ import { generateToken } from '@/utils/jwt';
 export const loginAdmin = async (req: Request, res: Response) => {
     const { username, password } = req.body;
     
-    console.log(`[AUTH] Поиск пользователя: ${username}`);
-    
     try {
 
 

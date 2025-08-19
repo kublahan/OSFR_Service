@@ -11,7 +11,6 @@ const uploadDir = process.env.SOFTWARE_DIR || path.join(__dirname, '..', '..', '
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (!fs.existsSync(uploadDir)) {
-      console.log(`Директория для загрузки файлов не найдена. Создаю: ${uploadDir}`);
       fs.mkdirSync(uploadDir, { recursive: true });
     }
     cb(null, uploadDir); 

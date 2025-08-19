@@ -35,9 +35,6 @@ const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, '../uploads');
 app.use('/uploads', express.static(uploadDir));
 
 
-console.log(`Файлы будут обслуживаться из: ${uploadDir}`);
-
-
 
 
 app.use((req, res, next) => {

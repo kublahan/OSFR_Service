@@ -35,7 +35,17 @@
         </div>
       </div>
     </div>
+    <div v-if="showErrorModal" class="modal-overlay">
+      <div class="modal-content">
+        <p>{{ errorMessage }}</p>
+        <div class="modal-actions">
+          <button @click="closeErrorModal" class="save-btn">ОК</button>
+        </div>
+      </div>
+    </div>
   </div>
+
+  
 </template>
 
 <script lang="ts">
@@ -60,155 +70,175 @@ interface TableItem {
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000';
 
 export default defineComponent({
-  name: 'MainUserView',
-  components: {
-    Sidebar,
-    SearchInput,
-    ResourcesButton
-  },
-  setup() {
-    const router = useRouter();
-    const items = ref<TableItem[]>([]);
-    const filteredItems = ref<TableItem[]>([]);
-    const categories = ref<{ id: number | string, name: string }[]>([]);
-    const searchTerm = ref('');
-    const selectedCategory = ref<number | string | null>(null);
-    const isMobile = ref(false);
+    name: 'MainUserView',
+    components: {
+        Sidebar,
+        SearchInput,
+        ResourcesButton
+    },
+    setup() {
+        const router = useRouter();
+        const items = ref<TableItem[]>([]);
+        const filteredItems = ref<TableItem[]>([]);
+        const categories = ref<{ id: number | string, name: string }[]>([]);
+        const searchTerm = ref('');
+        const selectedCategory = ref<number | string | null>(null);
+        const isMobile = ref(false);
 
-    const checkMobile = () => {
-      isMobile.value = window.innerWidth <= 768;
-    };
 
-    onMounted(() => {
-      checkMobile();
-      window.addEventListener('resize', checkMobile);
-    });
+        const showErrorModal = ref(false);
+        const errorMessage = ref('');
 
-    onUnmounted(() => {
-      window.removeEventListener('resize', checkMobile);
-    });
+        const checkMobile = () => {
+            isMobile.value = window.innerWidth <= 768;
+        };
 
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/api/categories`);
-        categories.value = response.data;
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    const fetchItems = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/api/items`);
-        items.value = response.data.map((item: any) => ({
-          ...item,
-          category_name: getCategoryName(item.category_id),
-          type: item.type || 'resource'
-        }));
-        applyFilters();
-      } catch (error) {
-        console.error('Error fetching items:', error);
-      }
-    };
-
-    const getCategoryName = (categoryId: number | string): string => {
-      const category = categories.value.find(c => c.id == categoryId);
-      return category ? category.name : `Категория ${categoryId}`;
-    };
-
-    const handleSearch = (term: string) => {
-      searchTerm.value = term;
-      applyFilters();
-    };
-
-    const handleCategorySelect = (categoryId: number | string | null) => {
-      selectedCategory.value = categoryId;
-      applyFilters();
-    };
-
-    const applyFilters = () => {
-      let result = items.value;
-      
-      if (selectedCategory.value !== null) {
-        result = result.filter(item => item.category_id == selectedCategory.value);
-      }
-      
-      if (searchTerm.value) {
-        const term = searchTerm.value.toLowerCase();
-        result = result.filter(item => 
-          item.name.toLowerCase().includes(term) || 
-          (item.service && item.service.toLowerCase().includes(term)) ||
-          (item.category_name && item.category_name.toLowerCase().includes(term))
-        );
-      }
-      
-      filteredItems.value = result;
-    };
-
-    const getCurrentCategoryName = () => {
-      if (searchTerm.value) {
-        return selectedCategory.value
-          ? `Результаты поиска в ${getCategoryName(selectedCategory.value)}`
-          : 'Результаты поиска';
-      }
-      return selectedCategory.value
-        ? getCategoryName(selectedCategory.value)
-        : 'Все категории';
-    };
-
-    const handleItemAction = (item: TableItem) => {
-      if (item.type === 'resource' && item.url) {
-        window.open(item.url, '_blank');
-      } else if (item.type === 'instruction') {
-        router.push({ name: 'instruction-view', params: { id: item.id } });
-      } else if (item.type === 'software') {
-        downloadItem(item);
-      }
-    };
-
-    const downloadItem = async (item: TableItem) => {
-      if (item.type !== 'software') return;
-      try {
-        const response = await api.get(`/software/download/${item.id}`, {
-          responseType: 'blob'
+        onMounted(() => {
+            checkMobile();
+            window.addEventListener('resize', checkMobile);
         });
-        
-        const fileName = `${item.name}.exe`;
-        
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', fileName);
-        document.body.appendChild(link);
-        link.click();
-        
-        setTimeout(() => {
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-        }, 100);
-      } catch (error) {
-        console.error('Ошибка при скачивании:', error);
-      }
-    };
 
+        onUnmounted(() => {
+            window.removeEventListener('resize', checkMobile);
+        });
 
-    fetchCategories();
-    fetchItems();
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/api/categories`);
+                categories.value = response.data;
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
 
-    return {
-      items,
-      filteredItems,
-      categories,
-      searchTerm,
-      selectedCategory,
-      isMobile,
-      handleSearch,
-      handleCategorySelect,
-      applyFilters,
-      getCurrentCategoryName,
-      handleItemAction,
-    };
-  }
+        const fetchItems = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/api/items`);
+                items.value = response.data.map((item: any) => ({
+                    ...item,
+                    category_name: getCategoryName(item.category_id),
+                    type: item.type || 'resource'
+                }));
+                applyFilters();
+            } catch (error) {
+                console.error('Error fetching items:', error);
+            }
+        };
+
+        const getCategoryName = (categoryId: number | string): string => {
+            const category = categories.value.find(c => c.id == categoryId);
+            return category ? category.name : `Категория ${categoryId}`;
+        };
+
+        const handleSearch = (term: string) => {
+            searchTerm.value = term;
+            applyFilters();
+        };
+
+        const handleCategorySelect = (categoryId: number | string | null) => {
+            selectedCategory.value = categoryId;
+            applyFilters();
+        };
+
+        const applyFilters = () => {
+            let result = items.value;
+            
+            if (selectedCategory.value !== null) {
+                result = result.filter(item => item.category_id == selectedCategory.value);
+            }
+            
+            if (searchTerm.value) {
+                const term = searchTerm.value.toLowerCase();
+                result = result.filter(item => 
+                    item.name.toLowerCase().includes(term) || 
+                    (item.service && item.service.toLowerCase().includes(term)) ||
+                    (item.category_name && item.category_name.toLowerCase().includes(term))
+                );
+            }
+            
+            filteredItems.value = result;
+        };
+
+        const getCurrentCategoryName = () => {
+            if (searchTerm.value) {
+                return selectedCategory.value
+                    ? `Результаты поиска в ${getCategoryName(selectedCategory.value)}`
+                    : 'Результаты поиска';
+            }
+            return selectedCategory.value
+                ? getCategoryName(selectedCategory.value)
+                : 'Все категории';
+        };
+
+        const handleItemAction = (item: TableItem) => {
+            if (item.type === 'resource' && item.url) {
+                window.open(item.url, '_blank');
+            } else if (item.type === 'instruction') {
+                router.push({ name: 'instruction-view', params: { id: item.id } });
+            } else if (item.type === 'software') {
+                downloadItem(item);
+            }
+        };
+
+        const downloadItem = async (item: TableItem) => {
+            if (item.type !== 'software') return;
+            try {
+                const response = await api.get(`/software/download/${item.id}`, {
+                    responseType: 'blob'
+                });
+                
+                let fileName = 'download';
+                const contentDisposition = response.headers['content-disposition'];
+                if (contentDisposition) {
+                    const fileNameMatch = contentDisposition.match(/filename="([^"]+)"/);
+                    if (fileNameMatch && fileNameMatch.length > 1) {
+                        fileName = decodeURIComponent(fileNameMatch[1]);
+                    }
+                }
+
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', fileName);
+                document.body.appendChild(link);
+                link.click();
+
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+            } catch (error) {
+                console.error('Ошибка при скачивании:', error);
+                errorMessage.value = 'Не удалось скачать файл';
+                showErrorModal.value = true;
+            }
+        };
+        
+        const closeErrorModal = () => {
+            showErrorModal.value = false;
+            errorMessage.value = '';
+        };
+
+        fetchCategories();
+        fetchItems();
+
+        return {
+            items,
+            filteredItems,
+            categories,
+            searchTerm,
+            selectedCategory,
+            isMobile,
+            handleSearch,
+            handleCategorySelect,
+            applyFilters,
+            getCurrentCategoryName,
+            handleItemAction,
+            showErrorModal,
+            errorMessage,
+            closeErrorModal,
+        };
+    }
 });
 </script>
 
@@ -216,7 +246,6 @@ export default defineComponent({
 .app-container {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
     background-color: #f5f5f5;
 }
 
@@ -229,9 +258,7 @@ export default defineComponent({
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
     width: 25.625rem;
-    overflow-y: auto;
     z-index: 999;
     background-color: white;
     padding: 2.25rem 2.5625rem;
@@ -241,6 +268,7 @@ export default defineComponent({
     margin-left: 25.625rem;
     flex-grow: 1;
     padding-bottom: 2rem;
+    min-height: 100vh;
 }
 
 .search-container {
@@ -363,4 +391,58 @@ export default defineComponent({
         display: block;
     }
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    z-index: 1001;
+}
+
+.modal-content p {
+    font-size: 1.5rem;
+    color: #1A185C;
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.save-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.save-btn {
+    background-color: #1150B0;
+    color: #fff;
+}
+
+.save-btn:hover {
+    background-color: #0d3a82;
+}
+
 </style>
