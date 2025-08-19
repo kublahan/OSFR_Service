@@ -168,33 +168,33 @@ export const downloadSoftware = asyncHandler(async (req: Request, res: Response,
         }
 
         const filePath = result.rows[0].file_path;
-        const displayName = result.rows[0].name;
         
+
+        const originalFileName = path.basename(filePath);
+
         if (!fs.existsSync(filePath)) {
             res.status(404).json({ error: 'Файл не найден на сервере' });
             return;
         }
 
-        const downloadFileName = `${displayName}.exe`;
+
+        res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(originalFileName)}"`);
         
-        return new Promise<void>((resolve, reject) => {
-            res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(downloadFileName)}"`);
-            res.setHeader('Content-Type', 'application/x-msdownload');
-            
-            const fileStream = fs.createReadStream(filePath);
-            fileStream.pipe(res);
 
-            fileStream.on('end', () => {
-                resolve();
-            });
+        res.setHeader('Content-Type', 'application/octet-stream');
+        
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
 
-            fileStream.on('error', (err) => {
-                console.error('Ошибка при чтении файла:', err);
-                if (!res.headersSent) {
-                    res.status(500).json({ error: 'Ошибка при чтении файла' });
-                }
-                reject(err);
-            });
+        fileStream.on('end', () => {
+            res.end();
+        });
+
+        fileStream.on('error', (err) => {
+            console.error('Ошибка при чтении файла:', err);
+            if (!res.headersSent) {
+                res.status(500).json({ error: 'Ошибка при чтении файла' });
+            }
         });
     } catch (err) {
         next(err);

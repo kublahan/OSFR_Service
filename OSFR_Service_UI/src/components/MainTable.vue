@@ -94,34 +94,39 @@ export default defineComponent({
         };
 
 const downloadItem = async (item: TableItem) => {
-  if (item.type === 'software') {
-    try {
-      const response = await api.get(`/software/download/${item.id}`, {
-        responseType: 'blob'
-      });
-      
+    if (item.type === 'software') {
+        try {
+            const response = await api.get(`/software/download/${item.id}`, {
+                responseType: 'blob'
+            });
 
-      const fileName = `${item.name}.exe`;
-      
+            
+            let fileName = 'download';
+            const contentDisposition = response.headers['content-disposition'];
+            if (contentDisposition) {
+                const fileNameMatch = contentDisposition.match(/filename="([^"]+)"/);
+                if (fileNameMatch && fileNameMatch.length > 1) {
+                    fileName = decodeURIComponent(fileNameMatch[1]);
+                }
+            }
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileName);
-      document.body.appendChild(link);
-      link.click();
-      
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
 
-      setTimeout(() => {
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      }, 100);
-    } catch (error) {
-      console.error('Ошибка при скачивании:', error);
-      errorMessage.value = 'Не удалось скачать файл';
-      showErrorModal.value = true;
+            setTimeout(() => {
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+        } catch (error) {
+            console.error('Ошибка при скачивании:', error);
+            errorMessage.value = 'Не удалось скачать файл';
+            showErrorModal.value = true;
+        }
     }
-  }
 };
 
         return {
