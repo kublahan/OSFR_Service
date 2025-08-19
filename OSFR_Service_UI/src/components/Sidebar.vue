@@ -4,23 +4,24 @@
       Корпоративный ресурс ОСФР
       <br>по г. Москве и Московской области
     </div>
-    
-    <div
-      class="sidebar-category"
-      :class="{ 'active': selectedCategoryId === null }"
-      @click="selectCategory(null)"
-    >
-      Все категории
-    </div>
+    <div class="sidebar-scroll-content">
+      <div
+        class="sidebar-category"
+        :class="{ 'active': selectedCategoryId === null }"
+        @click="selectCategory(null)"
+      >
+        Все категории
+      </div>
 
-    <div 
-      v-for="category in categories"
-      :key="category.id"
-      class="sidebar-category"
-      :class="{ 'active': selectedCategoryId === category.id }"
-      @click="selectCategory(category.id)"
-    >
-      {{ category.name }}
+      <div 
+        v-for="category in categories"
+        :key="category.id"
+        class="sidebar-category"
+        :class="{ 'active': selectedCategoryId === category.id }"
+        @click="selectCategory(category.id)"
+      >
+        {{ category.name }}
+      </div>
     </div>
   </div>
 </template>
@@ -68,16 +69,22 @@ export default defineComponent({
     #1A185C 100%
   );
   color: white;
-  min-height: 100vh;
+  height: 100vh;
+  box-sizing: border-box;
   position: fixed;
   top: 0;
+  z-index: 999;
   padding: 1rem;
   text-align: center;
   transition: transform 0.3s ease-in-out;
-  overflow-y: auto; 
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
 }
 
 .sidebar-head {
+  flex-shrink: 0;
   font-size: 32px;
   font-family: 'Lato-SemiBold';
   padding: 1rem;
@@ -86,6 +93,15 @@ export default defineComponent({
   letter-spacing: 0.03em;
   position: relative;
 }
+
+.sidebar-scroll-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 1rem;
+}
+
+
 
 .sidebar-category {
   padding: 1rem;
@@ -161,5 +177,14 @@ export default defineComponent({
   .close-btn {
     display: block;
   }
+}
+
+
+.sidebar-scroll-content::-webkit-scrollbar {
+  width: 8px; 
+}
+.sidebar-scroll-content::-webkit-scrollbar-thumb {
+  background-color: #5CA4FC;
+  border-radius: 4px;
 }
 </style>

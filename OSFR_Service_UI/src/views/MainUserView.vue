@@ -261,17 +261,6 @@ export default defineComponent({
     width: 100%;
 }
 
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 25.625rem;
-    z-index: 999;
-    background-color: white;
-    padding: 2.25rem 2.5625rem;
-    overflow-y: auto; 
-    min-height: 100vh;
-}
 
 .content-area {
     margin-left: 25.625rem;

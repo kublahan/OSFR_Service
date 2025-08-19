@@ -27,7 +27,7 @@
       >
         Все категории
       </div>
-      <!-- Динамический список категорий -->
+
       <div
         v-for="category in categories"
         :key="category.id"
@@ -42,6 +42,7 @@
 
 <script>
 import axios from 'axios';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
 export default {
   name: 'CategoryDropdown',
@@ -62,7 +63,7 @@ export default {
   async created() {
     try {
 
-      const response = await axios.get('http://localhost:3000/api/categories');
+      const response = await axios.get(`${API_BASE_URL}/categories`);
 
       this.categories = response.data;
     } catch (error) {

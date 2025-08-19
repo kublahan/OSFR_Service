@@ -106,7 +106,8 @@ export default defineComponent({
   align-items: center;
   justify-content: space-between;
   width: 37.938rem;
-  height: 3.875rem;
+  height: auto;
+  min-height: 3.875rem;
   background: linear-gradient(to right, #0D6EDE 0%, #073B78 100%);
   border: none;
   border-radius: 20px;
@@ -126,11 +127,17 @@ export default defineComponent({
   position: absolute;
   width: 37.938rem;
   background-color: #D6E9FD;
+  max-height: 230px;
   border-radius: 0 0 20px 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+
   border-top: 1px solid #c0d9fa;
   color: white;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1001;
+  
+  
 }
 
 .category-dropdown-item {
@@ -139,7 +146,9 @@ export default defineComponent({
   background-image: linear-gradient(to right, #0D6EDE 0%, #073B78 100%);
   cursor: pointer;
   border-bottom: 1px solid rgba(25, 31, 102, 0.1);
-  height: 47px;
+  min-height: 47px;
+  height: auto;
+  
 }
 
 .category-dropdown-item:last-child {
