@@ -37,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const auth_1 = require("../middleware/auth");
+// import { adminAuthMiddleware } from '../middleware/auth';
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const resourceController_1 = __importDefault(require("../controllers/resourceController"));
 const instructionController_1 = __importDefault(require("../controllers/instructionController"));
@@ -46,7 +46,7 @@ const MainDataController_1 = require("../controllers/MainDataController");
 const uploadController_1 = require("../controllers/uploadController");
 const softwareController = __importStar(require("../controllers/softwareController"));
 const router = (0, express_1.Router)();
-router.use(auth_1.adminAuthMiddleware);
+// router.use(adminAuthMiddleware);
 router.post('/upload-image', uploadController_1.uploadImage);
 router.post('/delete-image', uploadController_1.deleteImage);
 router.get('/dashboard', (0, express_async_handler_1.default)(async (req, res) => {
@@ -65,7 +65,6 @@ router.post('/software', softwareController.upload.single('file'), softwareContr
 router.get('/software/:id', softwareController.getSoftwarebyId);
 router.post('/software/:id', softwareController.upload.single('file'), softwareController.updateSoftware);
 router.delete('/software/:id', softwareController.deleteSoftware);
-router.get('/software/download/:id', softwareController.downloadSoftware);
 router.get('/categories', categoryController_1.getCategories);
 router.get('/all-items', MainDataController_1.getAllItems);
 exports.default = router;

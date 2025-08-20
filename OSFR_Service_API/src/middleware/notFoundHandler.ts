@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export const notFoundHandler = (
+const notFoundHandler = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -10,3 +10,4 @@ export const notFoundHandler = (
     message: `Path ${req.originalUrl} not found`
   });
 };
+export default notFoundHandler;

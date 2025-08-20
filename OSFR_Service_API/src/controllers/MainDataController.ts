@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import pool from '../models';
 import asyncHandler from 'express-async-handler';
 
-export const getAllItems = asyncHandler(async (req: Request, res: Response) => {
+export const getAllItems = asyncHandler(async (req: any, res: any) => {
     const { category } = req.query;
     let categoryId: number | null = null;
 

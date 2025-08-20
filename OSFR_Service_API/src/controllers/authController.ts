@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '@/config/data-source';
 import { generateToken } from '@/utils/jwt';
 
-export const loginAdmin = async (req: Request, res: Response) => {
+export const loginAdmin = async (req: any, res: any) => {
     const { username, password } = req.body;
     
     try {
@@ -16,19 +16,21 @@ export const loginAdmin = async (req: Request, res: Response) => {
 
 
         if (!admin) {
-            return res.status(401).json({ msg: 'Неверные учетные данные' });
+            res.status(401).json({ msg: 'Неверные учетные данные' });
+            return;
         }
 
 
         if (admin.password !== password) {
-            return res.status(401).json({ msg: 'Неверные учетные данные' });
+            res.status(401).json({ msg: 'Неверные учетные данные' });
+            return;
         }
 
         const token = generateToken(admin.id.toString());
-        return res.json({ token });
+        res.json({ token });
 
     } catch (error) {
         console.error('[AUTH] Ошибка:', error);
-        return res.status(500).json({ msg: 'Ошибка сервера' });
+        res.status(500).json({ msg: 'Ошибка сервера' });
     }
 };

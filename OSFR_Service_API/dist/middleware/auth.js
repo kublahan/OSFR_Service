@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.adminAuthMiddleware = exports.verifyToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const data_source_1 = require("@/config/data-source");
-const Admin_1 = require("@/entity/Admin");
+const data_source_1 = require("../config/data-source");
+const Admin_1 = require("../entity/Admin");
 dotenv_1.default.config();
 const verifyToken = (token) => {
     if (!process.env.JWT_SECRET) {

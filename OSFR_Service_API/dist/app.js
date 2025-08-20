@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
-const errorHandler_1 = require("@/middleware/errorHandler");
-const notFoundHandler_1 = require("@/middleware/notFoundHandler");
+const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
+const notFoundHandler_1 = __importDefault(require("./middleware/notFoundHandler"));
 const data_source_1 = require("./config/data-source");
 const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
-const publicRoutes = require('./routes/public').default;
-const adminRoutes = require('./routes/admin').default;
+const public_1 = __importDefault(require("./routes/public"));
+const admin_1 = __importDefault(require("./routes/admin"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -28,8 +28,8 @@ app.use((req, res, next) => {
     }
     next();
 });
-app.use('/api', publicRoutes);
-app.use('/api/admin', adminRoutes);
-app.use(notFoundHandler_1.notFoundHandler);
-app.use(errorHandler_1.errorHandler);
+app.use('/api', public_1.default);
+app.use('/api/admin', admin_1.default);
+app.use(notFoundHandler_1.default);
+app.use(errorHandler_1.default);
 exports.default = app;

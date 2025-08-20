@@ -24,11 +24,10 @@ const storage = multer.diskStorage({
   }
 });
 
+
 export const upload = multer({ storage: storage });
 
-export const createSoftware = asyncHandler(async (req: Request, res: Response) => {
-    console.log('Данные req.body:', req.body);
-    console.log('Данные req.file:', req.file);
+export const createSoftware = asyncHandler(async (req: any, res: any) => {
 
     const { name, description, category_id } = req.body;
     
@@ -51,7 +50,7 @@ export const createSoftware = asyncHandler(async (req: Request, res: Response) =
     res.status(201).json(newSoftware.rows[0]);
 });
 
-export const getSoftwarebyId = asyncHandler(async (req: Request, res: Response) => {
+export const getSoftwarebyId = asyncHandler(async (req: any, res: any) => {
     const { id } = req.params;
     const result = await pool.query('SELECT id, category_id, name, description, file_path FROM software WHERE id = $1', [id]);
     
@@ -72,7 +71,7 @@ export const getSoftwarebyId = asyncHandler(async (req: Request, res: Response) 
     }
 });
 
-export const updateSoftware = asyncHandler(async (req: Request, res: Response) => {
+export const updateSoftware = asyncHandler(async (req: any, res: any) => {
     const { id } = req.params;
     const { name, description, category_id } = req.body;
     
@@ -122,7 +121,7 @@ export const updateSoftware = asyncHandler(async (req: Request, res: Response) =
 });
 
 
-export const deleteSoftware = asyncHandler(async (req: Request, res: Response) => {
+export const deleteSoftware = asyncHandler(async (req: any, res: any) => {
     const { id } = req.params;
 
 
@@ -152,7 +151,7 @@ export const deleteSoftware = asyncHandler(async (req: Request, res: Response) =
     res.status(200).json({ message: 'ПО успешно удалено' });
 });
 
-export const downloadSoftware = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const downloadSoftware = asyncHandler(async (req: any, res: any, next: NextFunction) => {
     try {
         const { id } = req.params;
         

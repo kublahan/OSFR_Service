@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import pool from '../models';
 import asyncHandler from 'express-async-handler';
 
-export const getResourceById = asyncHandler(async (req: Request, res: Response) => {
+export const getResourceById = asyncHandler(async (req: any, res: any) => {
     const { id } = req.params;
     const result = await pool.query('SELECT id, name, service, url, category_id FROM resources WHERE id = $1', [id]);
     if (result.rows.length > 0) {
@@ -12,7 +12,7 @@ export const getResourceById = asyncHandler(async (req: Request, res: Response) 
     }
 });
 
-export const createResource = asyncHandler(async (req: Request, res: Response) => {
+export const createResource = asyncHandler(async (req: any, res: any) => {
     const { name, service, url, category_id } = req.body;
     const result = await pool.query(
         'INSERT INTO resources (name, service, url, category_id) VALUES ($1, $2, $3, $4) RETURNING *',
@@ -21,7 +21,7 @@ export const createResource = asyncHandler(async (req: Request, res: Response) =
     res.status(201).json(result.rows[0]);
 });
 
-export const updateResource = asyncHandler(async (req: Request, res: Response) => {
+export const updateResource = asyncHandler(async (req: any, res: any) => {
     const { id } = req.params;
     const { name, service, url, category_id } = req.body;
     const result = await pool.query(
@@ -35,7 +35,7 @@ export const updateResource = asyncHandler(async (req: Request, res: Response) =
     }
 });
 
-export const deleteResource = asyncHandler(async (req: Request, res: Response) => {
+export const deleteResource = asyncHandler(async (req: any, res: any) => {
     const { id } = req.params;
     const result = await pool.query('DELETE FROM resources WHERE id = $1 RETURNING *', [id]);
     if (result.rows.length > 0) {

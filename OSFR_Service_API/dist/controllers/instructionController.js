@@ -61,7 +61,6 @@ exports.getInstructionById = (0, express_async_handler_1.default)(async (req, re
 exports.createInstruction = (0, express_async_handler_1.default)(async (req, res, next) => {
     try {
         const { title, content, category_id } = req.body;
-        console.log('Received payload for creating instruction:', { title, content, category_id });
         if (!title || !content || !category_id) {
             res.status(400).json({ error: 'Missing required fields: title, content, and category_id are required.' });
             return;

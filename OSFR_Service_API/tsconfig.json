@@ -3,11 +3,11 @@
     "target": "es2020",
     "module": "commonjs",
     "moduleResolution": "node",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     },
     "rootDir": "./src",
     "outDir": "./dist",

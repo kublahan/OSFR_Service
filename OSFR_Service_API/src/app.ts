@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { errorHandler } from '@/middleware/errorHandler';
-import { notFoundHandler } from '@/middleware/notFoundHandler';
+import errorHandler from '@/middleware/errorHandler';
+import notFoundHandler from '@/middleware/notFoundHandler';
 import { AppDataSource } from './config/data-source';
 import path from 'path';
 
@@ -10,8 +10,8 @@ import path from 'path';
 dotenv.config();
 
 
-const publicRoutes = require('./routes/public').default;
-const adminRoutes = require('./routes/admin').default;
+import publicRoutes from './routes/public';
+import adminRoutes from './routes/admin';
 
 const app = express();
 
@@ -49,7 +49,7 @@ app.use('/api', publicRoutes);
 app.use('/api/admin', adminRoutes);
 
 
-app.use(notFoundHandler);
-app.use(errorHandler);
+app.use(notFoundHandler as express.RequestHandler);
+app.use(errorHandler as express.ErrorRequestHandler);
 
 export default app;

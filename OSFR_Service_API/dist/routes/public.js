@@ -32,16 +32,20 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const authController_1 = require("@/controllers/authController");
-const categoryController_1 = require("@/controllers/categoryController");
-const MainDataController_1 = require("@/controllers/MainDataController");
-const softwareController = __importStar(require("@/controllers/softwareController"));
+const authController_1 = require("../controllers/authController");
+const categoryController_1 = require("../controllers/categoryController");
+const MainDataController_1 = require("../controllers/MainDataController");
+const softwareController = __importStar(require("../controllers/softwareController"));
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const router = (0, express_1.Router)();
 router.get('/categories', categoryController_1.getCategories);
 router.get('/items', MainDataController_1.getAllItems);
-router.post('/auth/login', authController_1.loginAdmin);
+router.post('/auth/login', (0, express_async_handler_1.default)(authController_1.loginAdmin));
 router.get('/software/:id', softwareController.getSoftwarebyId);
 router.get('/software/download/:id', softwareController.downloadSoftware);
 exports.default = router;

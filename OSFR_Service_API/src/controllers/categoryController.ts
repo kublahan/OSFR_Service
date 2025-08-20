@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import pool from '../models';
 import asyncHandler from 'express-async-handler';
 
-export const getCategories = asyncHandler(async (req: Request, res: Response) => {
+export const getCategories = asyncHandler(async (req: any, res: any) => {
     const result = await pool.query(`
   SELECT id, name
   FROM categories

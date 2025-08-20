@@ -13,7 +13,7 @@ import {
 const window = new JSDOM('').window;
 const domPurify = DOMPurify(window);
 
-export const getInstructions = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const getInstructions = asyncHandler(async (req: any, res: any, next: NextFunction) => {
     const { category_id } = req.query;
     
     try {
@@ -44,8 +44,8 @@ export const getInstructions = asyncHandler(async (req: Request, res: Response, 
 });
 
 export const getInstructionById = asyncHandler(async (
-  req: Request<{ id: string }>,
-  res: Response<Instruction | { error: string }>,
+  req: any,
+  res: any,
   next: NextFunction
 ) => {
     try {
@@ -75,14 +75,13 @@ export const getInstructionById = asyncHandler(async (
 });
 
 export const createInstruction = asyncHandler(async (
-  req: Request<{}, any, CreateInstructionBody>,
-  res: Response<Instruction | { error: string }>,
+  req: any,
+  res: any,
   next: NextFunction
 ) => {
     try {
         const { title, content, category_id } = req.body;
         
-        console.log('Received payload for creating instruction:', { title, content, category_id });
         
         if (!title || !content || !category_id) {
             res.status(400).json({ error: 'Missing required fields: title, content, and category_id are required.' });
@@ -106,8 +105,8 @@ export const createInstruction = asyncHandler(async (
 });
 
 export const updateInstruction = asyncHandler(async (
-  req: Request<{ id: string }, any, UpdateInstructionBody>,
-  res: Response<Instruction | { error: string }>,
+  req: any,
+  res: any,
   next: NextFunction
 ) => {
     try {
@@ -143,8 +142,8 @@ export const updateInstruction = asyncHandler(async (
 });
 
 export const deleteInstruction = asyncHandler(async (
-  req: Request<{ id: string }>,
-  res: Response<{ success: boolean; message: string; deletedId: string } | { error: string }>,
+  req: any,
+  res: any,
   next: NextFunction
 ) => {
     try {

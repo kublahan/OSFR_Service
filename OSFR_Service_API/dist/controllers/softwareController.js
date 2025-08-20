@@ -26,8 +26,6 @@ const storage = multer_1.default.diskStorage({
 });
 exports.upload = (0, multer_1.default)({ storage: storage });
 exports.createSoftware = (0, express_async_handler_1.default)(async (req, res) => {
-    console.log('Данные req.body:', req.body);
-    console.log('Данные req.file:', req.file);
     const { name, description, category_id } = req.body;
     if (!req.file) {
         res.status(400).json({ error: 'Не удалось загрузить файл. Пожалуйста, убедитесь, что файл был выбран.' });
