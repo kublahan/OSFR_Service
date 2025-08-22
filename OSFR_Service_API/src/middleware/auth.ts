@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import { AppDataSource } from '@/config/data-source';
 import { Admin } from '@/entity/Admin';
 
-dotenv.config();
 
 declare global {
   namespace Express {
@@ -13,7 +11,7 @@ declare global {
     }
   }
 }
-
+const JWT_SECRET = 'MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCBspIeyyapzYrndg4eyjmQTNQJJHqZrj0A5yFbKe287tg==';
 
 export const verifyToken = (token: string): { userId: string } => {
   if (!process.env.JWT_SECRET) {

@@ -16,3 +16,15 @@ export const AppDataSource = new DataSource({
     entities: [Admin],
     logging: false
 });
+
+// export const AppDataSource = new DataSource({
+//     type: 'postgres',
+//     host: 'localhost',
+//     port: 5432,
+//     username: 'postgres',
+//     password: 'kerulen2',
+//     database: 'OSFR_Service',
+//     schema: 'public',
+//     entities: [Admin],
+//     logging: false
+// });

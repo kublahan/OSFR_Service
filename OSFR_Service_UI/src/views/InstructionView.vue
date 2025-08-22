@@ -216,44 +216,6 @@ export default defineComponent({
 
 
 
-.instruction-content :deep(img) {
-  display: inline-block;
-  vertical-align: middle;
-  max-width: 100%;
-  height: auto;
-  margin: 20px auto;
-}
-
-
-.instruction-content :deep(.ql-align-left) img {
-    margin-left: 0;
-    margin-right: auto;
-}
-
-.instruction-content :deep(.ql-align-right) img {
-    margin-left: auto;
-    margin-right: 0;
-}
-
-.instruction-content :deep(.ql-align-center) img {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.instruction-content :deep(p) {
-  margin: 0;
-  line-height: 1.6;
-}
-
-.instruction-content :deep(.ql-indent-1) {
-  margin-left: 3em;
-}
-
-.instruction-content :deep(.ql-indent-2) {
-  margin-left: 6em;
-}
-
-
 .instruction-content :deep(.ql-font-times-new-roman) {
   font-family: "Times New Roman", Times, serif;
 }

@@ -303,6 +303,8 @@ export default defineComponent({
   display: block;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .ql-editor .custom-image {

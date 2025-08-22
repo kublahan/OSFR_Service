@@ -7,6 +7,8 @@ dotenv.config();
 const PORT = process.env.PORT || 3000; 
 const HOST = process.env.HOST || 'localhost';
 
+// const PORT = 3000;
+// const HOST = '0.0.0.0';
 
 async function startServer() {
   try {

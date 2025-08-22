@@ -5,15 +5,17 @@ import path from 'path';
 import multer from 'multer';
 import fs from 'fs';
 
-const uploadDir = process.env.SOFTWARE_DIR || path.join(__dirname, '..', '..', 'uploads', 'software');
+// const software_dir = 'D:\\Programming\\Projects\\ImageOSFR';
+
+const software_dir = process.env.SOFTWARE_DIR || path.join(__dirname, '..', '..', 'uploads', 'software');
 
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    if (!fs.existsSync(software_dir)) {
+      fs.mkdirSync(software_dir, { recursive: true });
     }
-    cb(null, uploadDir); 
+    cb(null, software_dir); 
   },
   filename: (req, file, cb) => {
 

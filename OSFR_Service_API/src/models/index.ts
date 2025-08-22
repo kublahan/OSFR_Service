@@ -17,6 +17,13 @@ const poolConfig = {
     password: process.env.DB_PASSWORD,
     port: parseInt(process.env.DB_PORT || '5432', 10),
 };
+// const poolConfig = {
+//     user: 'postgres',
+//     host: 'localhost',
+//     database: 'OSFR_Service',
+//     password: 'kerulen2',
+//     port: 5432,
+// };
 
 const pool = new Pool(poolConfig);
 

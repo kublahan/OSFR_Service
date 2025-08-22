@@ -1,14 +1,14 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 
-dotenv.config();
+
+const JWT_SECRET = 'MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCBspIeyyapzYrndg4eyjmQTNQJJHqZrj0A5yFbKe287tg==';
 
 export function generateToken(userId: string, options?: jwt.SignOptions): string {
-  if (!process.env.JWT_SECRET) {
+  if (!JWT_SECRET) {
     throw new Error('JWT_SECRET не задан в .env');
   }
   
-  return jwt.sign({ userId }, process.env.JWT_SECRET, {
+  return jwt.sign({ userId }, JWT_SECRET, {
     ...options
   });
 }

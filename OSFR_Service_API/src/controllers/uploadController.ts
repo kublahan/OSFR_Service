@@ -3,6 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
+// const uploadDir = 'D:\\Programming\\Projects\\ImageOSFR';
 const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, '../../uploads');
 
 
@@ -46,6 +47,7 @@ export const uploadImage = (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Файл не был загружен' });
     }
 
+    // const serverUrl = 'http://localhost:3000';
     const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
     const fileUrl = `${serverUrl}/uploads/${path.basename(req.file.path)}`;
     
